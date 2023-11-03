@@ -1,4 +1,4 @@
-import styles from "../stylesheets/Navbar.module.css"
+import styles from "../styles/navbar.module.scss"
 import NotesToolConatiner from "./NotesToolConatiner"
 export default function Navbar(){
     return (

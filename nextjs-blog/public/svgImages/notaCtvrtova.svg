@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="notaCtvrtova.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.27023919"
+     inkscape:cx="432.94979"
+     inkscape:cy="81.409362"
+     inkscape:window-width="992"
+     inkscape:window-height="1008"
+     inkscape:window-x="912"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Vrstva 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#000000;stroke-width:1.09233"
+       d="m 86.056251,293.42424 c -13.745344,-4.5153 -20.734273,-16.33887 -17.70862,-29.9587 1.871489,-8.42441 4.21978,-12.66425 11.380663,-20.54783 8.819424,-9.70945 24.353066,-19.16784 33.881186,-20.63012 13.92258,-2.13671 20.37497,-1.54529 29.09247,2.66656 l 4.31737,2.08593 V 114.629 2.2178936 h 4.39149 4.39152 L 155.50715,128.65534 c -0.24399,104.47089 -0.55611,127.0068 -1.79668,129.71443 -0.82579,1.80238 -2.03974,4.50589 -2.69765,6.00783 -3.28145,7.49124 -15.1364,19.20364 -23.10923,22.83143 -12.09907,5.50528 -16.76609,6.77082 -26.76213,7.25704 -7.221906,0.35133 -11.808667,0.033 -15.085127,-1.04183 z"
+       id="path836" />
+  </g>
+</svg>

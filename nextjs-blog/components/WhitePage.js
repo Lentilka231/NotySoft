@@ -1,4 +1,4 @@
-import styles from "../stylesheets/WhitePage.module.css"
+import styles from "../styles/whitepage.module.scss"
 export default function WhitePage() {
     return (
         <div className={styles.WhitePage}>

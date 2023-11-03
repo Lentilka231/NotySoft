@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1781"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="notaPulova.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1783"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.27023919"
+     inkscape:cx="455.15234"
+     inkscape:cy="266.43064"
+     inkscape:window-width="992"
+     inkscape:window-height="1008"
+     inkscape:window-x="1913"
+     inkscape:window-y="6"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1778" />
+  <g
+     inkscape:label="Vrstva 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#000000;stroke-width:1.05635"
+       d="m 89.766781,293.0193 c -6.597706,-1.84598 -14.191989,-9.22152 -16.13803,-15.67321 -3.628537,-12.02964 -2.65217,-28.90082 3.703157,-37.30575 8.178187,-10.81569 8.32818,-10.81439 21.066536,-19.08487 2.655256,-1.72394 8.260486,-4.38038 12.735266,-5.59495 4.44769,-1.20724 9.12438,-1.54834 13.73266,-1.60204 5.92311,-0.069 12.73962,-0.0279 17.69401,1.64738 l 6.07408,2.05262 V 110.93019 4.4019372 h 4.7536 4.75363 l -0.024,123.8580528 c 0,0 0.0535,114.83625 -0.0241,123.85801 -0.41935,2.12097 -2.4672,5.99848 -2.4672,5.99848 -2.74815,10.35567 -17.63912,27.02695 -43.4343,34.72687 -4.23618,1.26451 -16.781708,1.7544 -22.423283,0.17607 z m 6.049731,-16.49911 c 15.723288,-4.81512 30.680018,-15.12252 42.844638,-29.52629 6.41656,-7.59763 7.77522,-9.94164 7.82317,-13.49688 0.10782,-7.99394 -10.85051,-6.99149 -26.89973,2.46075 -11.82369,6.96363 -19.638357,12.86771 -26.526842,20.04135 -9.597976,9.9953 -11.982918,15.85387 -8.169288,20.06788 2.083785,2.30253 4.554606,2.40501 10.928052,0.45319 z"
+       id="path1854"
+       sodipodi:nodetypes="csssaaccccccccssccsssssss" />
+  </g>
+</svg>
