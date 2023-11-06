@@ -10,20 +10,9 @@ $darkGrey2:#333533;
     width:100%;
     height:100px;
 }
-
 .toolContainer{
     display: grid;
     grid-template-rows: 35px 35px;
     grid-template-columns: repeat(4,30px);
     padding:15px;
-}
-.notaInToolBar{
-    padding:1px;
-    border-radius: 3px;
-    &:hover{
-        background-color: $yellowishOrange;
-    }
-    &:hover .notaInToolBarSVG{
-        fill:$darkGrey1 !important;
-    }
 }

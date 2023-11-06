@@ -1,0 +1,36 @@
+[
+    [
+        {
+            "sign":"clef",
+            "type":"treble"
+        },
+        {
+            "sign":"clef",
+            "type":"bass"
+        },
+        {
+            "sign":"clef",
+            "type":"alto"
+        },
+        {
+            "sign":"time",
+            "type":"44"
+        },
+        {
+            "sign":"time",
+            "type":"34"
+        },
+        {
+            "sign":"time",
+            "type":"24"
+        },
+        {
+            "sign":"time",
+            "type":"64"
+        },
+        {
+            "sign":"note",
+            "type":"whole"
+        }
+    ]
+]

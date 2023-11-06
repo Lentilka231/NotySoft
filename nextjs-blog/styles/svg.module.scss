@@ -1,0 +1,25 @@
+$lightGrey: #D6D6D6;
+$brightYellow: #FFEE32;
+$yellowishOrange: #FFD100;
+$darkGrey1: #202020;
+$darkGrey2:#333533;
+
+.noteInToolBar{
+    cursor: pointer;
+    padding:1px;
+    border-radius: 3px;
+    &:hover{
+        background-color: $yellowishOrange;
+    }
+    &:hover path{
+        fill:$darkGrey1 !important;
+    }
+}
+.clef{
+    position: relative;
+    top:27px;
+}
+.time{
+    position: relative;
+    top:13px;
+}
