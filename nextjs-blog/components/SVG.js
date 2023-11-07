@@ -1,5 +1,20 @@
 import styles from "../styles/svg.module.scss"
-export function Note({className,colour="#000000", width,height,type="1"}){
+
+function HelpLines(tone=0){
+    console.log(tone); 
+    if (tone>0 && tone<12){
+        return 
+    }else {
+        return(
+            <line 
+            style={{"stroke":"black","stroke-width":"7"}}
+            x1="30" y1="260"
+            x2="180" y2="260"
+            />
+        )
+    }
+}
+export function Note({className,colour="#000000", width,height,type="1",tone="0"}){
     switch (colour){
         case "orange":
             colour="#f7a800"
@@ -23,13 +38,14 @@ export function Note({className,colour="#000000", width,height,type="1"}){
     return(
         <svg
         className={styles[className]}
-
+        style={{"top":27-(5*tone)+"px"}}
         height={height}
         width={width}
         viewBox="0 0 210 297">
             <path
             style={{"fill":colour}}
-            d={d}/>
+            d={d}/>            
+            <HelpLines tone={tone}/>
         </svg>
     )   
 }

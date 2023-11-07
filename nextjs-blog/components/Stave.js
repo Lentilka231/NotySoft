@@ -18,7 +18,7 @@ function Signs({rowData}){
                 {rowData.map((sign) =>{
                     switch (sign["sign"]){
                         case "note":
-                            return <Note type={sign["type"]} width="20px" className="note"/>
+                            return <Note type={sign["type"]} width="30px" tone={sign["tone"]} className="note"/>
                         case "clef":
                             return <Clef type={sign["type"]} width="50px" className="clef" />
                         case "time":

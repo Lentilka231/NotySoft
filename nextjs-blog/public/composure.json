@@ -30,7 +30,24 @@
         },
         {
             "sign":"note",
-            "type":"whole"
+            "type":"whole",
+            "tone":4
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":5
+
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":1
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":0
         }
     ]
 ]
