@@ -1,20 +1,52 @@
 import styles from "../styles/svg.module.scss"
 
-function HelpLines(tone=0){
-    console.log(tone); 
-    if (tone>0 && tone<12){
-        return 
-    }else {
+function HelpLines({tone}){
+    let iterator = [];
+    
+    if (tone<1){
+        for(let i = 0; i>=tone; i-=2){
+            iterator[-i/2]=-i/2
+        }
         return(
-            <line 
-            style={{"stroke":"black","stroke-width":"7"}}
-            x1="30" y1="260"
-            x2="180" y2="260"
-            />
+            <svg
+            className={styles.helpLines}
+            width="30px"
+            viewBox="0 0 210 1400"
+            >
+                {iterator.map((i)=>(
+                    <line 
+                    style={{"stroke":"black","stroke-width":"10"}}
+                    x1="30" y1={255-i*72+(tone%2==0?0:-37)+"px"}
+                    x2="180" y2={255-i*72+(tone%2==0?0:-37)+"px"}
+                    />
+                ))}
+            </svg>
+            
         )
+    } else if(tone>11){
+        for(let i = 0; i<=(tone-12); i+=2){
+            iterator[i/2]=i/2
+        }
+        console.log(iterator)
+        return(
+            <svg
+            className={styles.helpLines}
+            width="30px"
+            viewBox="0 0 210 1400">
+                {iterator.map((i)=>(
+                    <line 
+                    style={{"stroke":"black","stroke-width":"10"}}
+                    x1="30" y1={257+i*72+(tone%2==0?0:37)+"px"}
+                    x2="180" y2={257+i*72+(tone%2==0?0:37)+"px"}
+                    />
+                ))}
+            </svg>
+        )
+    }else{
+        return
     }
 }
-export function Note({className,colour="#000000", width,height,type="1",tone="0"}){
+export function Note({className,colour="#000000", width,height,type="1",tone=1}){
     switch (colour){
         case "orange":
             colour="#f7a800"
@@ -36,17 +68,20 @@ export function Note({className,colour="#000000", width,height,type="1",tone="0"
             break;
     }
     return(
+    <div 
+    style={{"top":27-(5*tone)+"px"}}
+    className={styles[className]}>
         <svg
-        className={styles[className]}
-        style={{"top":27-(5*tone)+"px"}}
+        
         height={height}
         width={width}
         viewBox="0 0 210 297">
             <path
             style={{"fill":colour}}
             d={d}/>            
-            <HelpLines tone={tone}/>
         </svg>
+        <HelpLines tone={tone}/>
+    </div>
     )   
 }
 export function Clef({className,colour="#000000", width, height, type="treble"}){

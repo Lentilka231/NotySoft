@@ -42,12 +42,93 @@
         {
             "sign":"note",
             "type":"whole",
+            "tone":10
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":11
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":12
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":13
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":14
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":15
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":16
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":17
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":18
+        },
+        {
+            "sign":"note",
+            "type":"whole",
             "tone":1
         },
         {
             "sign":"note",
             "type":"whole",
             "tone":0
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-1
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-2
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-3
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-4
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-5
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-6
+        },
+        {
+            "sign":"note",
+            "type":"whole",
+            "tone":-7
         }
+
     ]
 ]

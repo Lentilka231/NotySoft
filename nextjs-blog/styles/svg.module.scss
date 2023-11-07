@@ -24,6 +24,12 @@ $darkGrey2:#333533;
     top:13px;
 }
 .note{
+    display:inline;
     position:relative;
     top:2px;
+}
+.helpLines{
+    position: absolute;
+    top:-27px;
+    left:0px
 }
