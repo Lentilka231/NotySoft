@@ -8,11 +8,7 @@ function HelpLines({tone}){
             iterator[-i/2]=-i/2
         }
         return(
-            <svg
-            className={styles.helpLines}
-            width="30px"
-            viewBox="0 0 210 600"
-            >
+            <>
                 {iterator.map((i)=>(
                     <line 
                     style={{"stroke":"black","stroke-width":"10"}}
@@ -20,18 +16,14 @@ function HelpLines({tone}){
                     x2="180" y2={255-i*72+(tone%2==0?0:-37)+"px"}
                     />
                 ))}
-            </svg>
-            
+            </>
         )
     } else if(tone>11){
         for(let i = 0; i<=(tone-12); i+=2){
             iterator[i/2]=i/2
         }
         return(
-            <svg
-            className={styles.helpLines}
-            width="30px"
-            viewBox="0 0 210 600">
+            <>
                 {iterator.map((i)=>(
                     <line 
                     style={{"stroke":"black","stroke-width":"10"}}
@@ -39,7 +31,7 @@ function HelpLines({tone}){
                     x2="180" y2={255+i*72+(tone%2==0?0:37)+"px"}
                     />
                 ))}
-            </svg>
+            </>
         )
     }else{
         return
@@ -67,22 +59,37 @@ export function Note({className,colour="#000000", width,height,type="1",tone=1})
             break;
     }
     console.log("tone: "+tone+ " "+(27-(5*tone))+"px")
-    return(
-    <div 
-    style={{"top":27-(5*tone)+"px"}}
-    className={styles[className]}>
-        <svg
-        
-        height={height}
-        width={width}
-        viewBox="0 0 210 297">
-            <path
-            style={{"fill":colour}}
-            d={d}/>            
-        </svg>
-        <HelpLines tone={tone}/>
-    </div>
-    )   
+    if(className=="noteInToolBar"){
+        return(
+                <svg
+                className={styles[className]}
+                height={height}
+                width={width}
+                viewBox="0 0 210 297">
+                    <path
+                    style={{"fill":colour}}
+                    d={d}/>            
+                </svg>
+            )   
+    }else{
+        return(
+        <div 
+        style={{"top":55.5-(5*tone)+"px"}}
+        className={styles[className]}>
+            <svg
+            
+            height={height}
+            width={width}
+            viewBox="0 0 210 700">
+                <path
+                
+                style={{"fill":colour}}
+                d={d}/>            
+                <HelpLines tone={tone}/>
+            </svg>
+        </div>
+        )   
+    }
 }
 export function Clef({className,colour="#000000", width, height, type="treble"}){
     let d ="";
