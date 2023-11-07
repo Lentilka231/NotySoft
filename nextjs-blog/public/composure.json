@@ -29,6 +29,22 @@
             "type":"64"
         },
         {
+            "sign":"time",
+            "type":"28"
+        },
+        {
+            "sign":"time",
+            "type":"38"
+        },
+        {
+            "sign":"time",
+            "type":"48"
+        },
+        {
+            "sign":"time",
+            "type":"68"
+        },
+        {
             "sign":"note",
             "type":"whole",
             "tone":4
