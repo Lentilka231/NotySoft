@@ -8,11 +8,7 @@ function HelpLines({tone}){
             iterator[-i/2]=-i/2
         }
         return(
-            <svg
-            className={styles.helpLines}
-            width="30px"
-            viewBox="0 0 210 600"
-            >
+            <>
                 {iterator.map((i)=>(
                     <line 
                     style={{"stroke":"black","stroke-width":"10"}}
@@ -20,18 +16,14 @@ function HelpLines({tone}){
                     x2="180" y2={255-i*72+(tone%2==0?0:-37)+"px"}
                     />
                 ))}
-            </svg>
-            
+            </>
         )
     } else if(tone>11){
         for(let i = 0; i<=(tone-12); i+=2){
             iterator[i/2]=i/2
         }
         return(
-            <svg
-            className={styles.helpLines}
-            width="30px"
-            viewBox="0 0 210 600">
+            <>
                 {iterator.map((i)=>(
                     <line 
                     style={{"stroke":"black","stroke-width":"10"}}
@@ -39,7 +31,7 @@ function HelpLines({tone}){
                     x2="180" y2={255+i*72+(tone%2==0?0:37)+"px"}
                     />
                 ))}
-            </svg>
+            </>
         )
     }else{
         return
@@ -66,22 +58,38 @@ export function Note({className,colour="#000000", width,height,type="1",tone=1})
             d="m 86.056251,293.42424 c -13.745344,-4.5153 -20.734273,-16.33887 -17.70862,-29.9587 1.871489,-8.42441 4.21978,-12.66425 11.380663,-20.54783 8.819424,-9.70945 24.353066,-19.16784 33.881186,-20.63012 13.92258,-2.13671 20.37497,-1.54529 29.09247,2.66656 l 4.31737,2.08593 V 114.629 2.2178936 h 4.39149 4.39152 L 155.50715,128.65534 c -0.24399,104.47089 -0.55611,127.0068 -1.79668,129.71443 -0.82579,1.80238 -2.03974,4.50589 -2.69765,6.00783 -3.28145,7.49124 -15.1364,19.20364 -23.10923,22.83143 -12.09907,5.50528 -16.76609,6.77082 -26.76213,7.25704 -7.221906,0.35133 -11.808667,0.033 -15.085127,-1.04183 z"
             break;
     }
-    return(
-    <div 
-    style={{"top":27-(5*tone)+"px"}}
-    className={styles[className]}>
-        <svg
-        
-        height={height}
-        width={width}
-        viewBox="0 0 210 297">
-            <path
-            style={{"fill":colour}}
-            d={d}/>            
-        </svg>
-        <HelpLines tone={tone}/>
-    </div>
-    )   
+    console.log("tone: "+tone+ " "+(27-(5*tone))+"px")
+    if(className=="noteInToolBar"){
+        return(
+                <svg
+                className={styles[className]}
+                height={height}
+                width={width}
+                viewBox="0 0 210 297">
+                    <path
+                    style={{"fill":colour}}
+                    d={d}/>            
+                </svg>
+            )   
+    }else{
+        return(
+        <div 
+        style={{"top":55.5-(5*tone)+"px"}}
+        className={styles[className]}>
+            <svg
+            
+            height={height}
+            width={width}
+            viewBox="0 0 210 700">
+                <path
+                
+                style={{"fill":colour}}
+                d={d}/>            
+                <HelpLines tone={tone}/>
+            </svg>
+        </div>
+        )   
+    }
 }
 export function Clef({className,colour="#000000", width, height, type="treble"}){
     let d ="";
