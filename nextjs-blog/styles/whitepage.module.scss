@@ -29,3 +29,16 @@
     height:100%;
     top:0px;
 }
+.bar{
+    display:inline-block;
+    position: relative;
+    min-width:fit-content;
+}
+.barLine{
+    width:1px;
+    height:40px;
+    position:absolute;
+    top: 23px;
+    right:0px;
+    background-color: black;
+}

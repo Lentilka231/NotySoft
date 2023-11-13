@@ -16,16 +16,20 @@ $darkGrey2:#333533;
     }
 }
 .clef{
+    height:100%;
+    display:inline-block;
     position: relative;
-    top:27px;
+    top:6px;
 }
 .time{
+    height:100%;
+    display:inline-block;
     position: relative;
-    top:13px;
+    top:7px;
 }
 .note{
-    display:inline;
-    position:absolute;
+    display:inline-block;
+    position:relative;
 }
 .helpLines{
     position: absolute;

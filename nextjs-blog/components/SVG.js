@@ -37,7 +37,7 @@ function HelpLines({tone}){
         return
     }
 }
-export function Note({className,colour="#000000", width,height,type="1",tone=1}){
+export function Note({className,colour="#000000", width,height,type="whole",tone=1,setNewActiveTool}){
     switch (colour){
         case "orange":
             colour="#f7a800"
@@ -62,6 +62,7 @@ export function Note({className,colour="#000000", width,height,type="1",tone=1})
         return(
                 <svg
                 className={styles[className]}
+                onClick={()=>setNewActiveTool(type)}
                 height={height}
                 width={width}
                 viewBox="0 0 210 297">
@@ -73,7 +74,7 @@ export function Note({className,colour="#000000", width,height,type="1",tone=1})
     }else{
         return(
         <div 
-        style={{"top":55.5-(5*tone)+"px"}}
+        style={{"top":38.5-(5*tone)+"px"}}
         className={styles[className]}>
             <svg
             

@@ -1,10 +1,10 @@
 import styles from "../styles/navbar.module.scss"
-import NotesToolConatiner from "./NotesToolConatiner"
-export default function Navbar(){
+import NotesToolContainer from "./NotesToolContainer"
+export default function Navbar({setActiveTool}){
     return (
         <>
         <header  className={styles.NavBar}>
-            <NotesToolConatiner/>
+            <NotesToolContainer setActiveTool={setActiveTool} />
         </header>
         </>
     )

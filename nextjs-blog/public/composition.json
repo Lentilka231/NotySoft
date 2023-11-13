@@ -61,13 +61,27 @@
                 },
                 {
                     "sign":"note",
+                    "type":"half",
+                    "tone":5
+        
+                }
+            ]
+        },
+        {
+            "object":"bar",
+            "RightBarLine":"line",
+            "content":[
+
+                {
+                    "sign":"note",
                     "type":"whole",
-                    "tone":10
+                    "tone":4
                 },
                 {
                     "sign":"note",
                     "type":"whole",
-                    "tone":11
+                    "tone":5
+        
                 }
             ]
         }

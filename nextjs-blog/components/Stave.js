@@ -1,5 +1,6 @@
 import styles from "../styles/whitepage.module.scss"
 import {Note,Clef,Time} from "./SVG"
+import React from "react"
 function Line({onMouseEnter}){
     return (
         <div onMouseEnter={(e) => onMouseEnter(e.target)} className={styles.line}></div>
@@ -16,7 +17,7 @@ function Signs({object}){
         {object["content"].map((sign) =>{
             switch(sign["sign"]){
                 case "note":
-                    return <Note type={sign["type"]} width="30px" tone={sign["tone"]} className="note"/>
+                    return <Note type={sign["type"]} width="28px" tone={sign["tone"]} className="note"/>
                 case "pause":
                     return;
             }
@@ -30,7 +31,12 @@ function Objects({data}){
         {data.map((object) =>{
             switch (object["object"]){
                 case "bar":
-                    return <Signs object={object}/>
+                    return (
+                        <div className={styles.bar}>
+                            <Signs object={object}/>
+                            <div class={styles.barLine}></div>
+                        </div>
+                    )
                 case "clef":
                     return <Clef type={object["type"]} width="50px" className="clef" />
                 case "time":
@@ -40,8 +46,11 @@ function Objects({data}){
     </div>
     )
 }
-export default function Stave ({data, setData}){
+export default function Stave ({data, setData, activeTool}){
     function signitureEmerge(top){
+        setData(currentData =>{
+            return currentData
+        })
         //console.log(top);
     }
     return (
