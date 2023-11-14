@@ -1,14 +1,14 @@
 import styles from "../styles/whitepage.module.scss"
 import {Note,Clef,Time} from "./SVG"
 import React from "react"
-function Line({onMouseEnter}){
+function Line({onMouseEnter,tone}){
     return (
-        <div onMouseEnter={(e) => onMouseEnter(e.target)} className={styles.line}></div>
+        <div onMouseEnter={() => onMouseEnter(tone)} className={styles.line}></div>
     )
 }
-function Space({onMouseEnter}){
+function Space({onMouseEnter,tone}){
     return (
-        <div onMouseEnter={(e) => onMouseEnter(e.target)} className={styles.space}></div>
+        <div onMouseEnter={() => onMouseEnter(tone)} className={styles.space}></div>
     )
 }
 function Signs({object}){
@@ -47,45 +47,49 @@ function Objects({data}){
     )
 }
 export default function Stave ({data, setData, activeTool, barPointer}){
-    function signitureEmerge(top){
+    function addNewSigniture(tone){
         setData(currentData =>{
-            console.log(currentData)
+            return {...currentData,"composition":currentData["composition"].map(k=>{
+                if(k["index"]=="bar"+barPointer){
+                    k["content"].push({"sign":"note","type":activeTool,"tone":tone})
+                }
+                return k
+            })}
 
-            return currentData["staves"]+currentData["composition"].map((k) =>{
-                return {...k};
-            })
         })
-        //console.log(top);
+    }
+    function removeNewSigniture(){
+
     }
     return (
         <div className={styles.stave}>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
+            <Space onMouseEnter={addNewSigniture} tone={18}/>
+            <Space onMouseEnter={addNewSigniture} tone={17}/>
+            <Space onMouseEnter={addNewSigniture} tone={16}/>
+            <Space onMouseEnter={addNewSigniture} tone={15}/>
+            <Space onMouseEnter={addNewSigniture} tone={14}/>
+            <Space onMouseEnter={addNewSigniture} tone={13}/>
+            <Space onMouseEnter={addNewSigniture} tone={12}/>
+            <Space onMouseEnter={addNewSigniture} tone={11}/>
 
-            <Line onMouseEnter={signitureEmerge} />
-            <Space onMouseEnter={signitureEmerge}/>
-            <Line onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Line onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Line onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Line onMouseEnter={signitureEmerge}/>
+            <Line onMouseEnter={addNewSigniture} tone={10}/>
+            <Space onMouseEnter={addNewSigniture} tone={9}/>
+            <Line onMouseEnter={addNewSigniture} tone={8}/>
+            <Space onMouseEnter={addNewSigniture} tone={7}/>
+            <Line onMouseEnter={addNewSigniture} tone={6}/>
+            <Space onMouseEnter={addNewSigniture} tone={5}/>
+            <Line onMouseEnter={addNewSigniture} tone={4}/>
+            <Space onMouseEnter={addNewSigniture} tone={3}/>
+            <Line onMouseEnter={addNewSigniture} tone={2}/>
 
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
-            <Space onMouseEnter={signitureEmerge}/>
+            <Space onMouseEnter={addNewSigniture} tone={1}/>
+            <Space onMouseEnter={addNewSigniture} tone={0}/>
+            <Space onMouseEnter={addNewSigniture} tone={-1}/>
+            <Space onMouseEnter={addNewSigniture} tone={-2}/>
+            <Space onMouseEnter={addNewSigniture} tone={-3}/>
+            <Space onMouseEnter={addNewSigniture} tone={-4}/>
+            <Space onMouseEnter={addNewSigniture} tone={-5}/>
+            <Space onMouseEnter={addNewSigniture} tone={-6}/>
             <Objects data={data["composition"]}/>
         </div>
     )
