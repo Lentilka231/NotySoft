@@ -14,10 +14,10 @@ function Space({onMouseEnter}){
 function Signs({object}){
     return(
         <>
-        {object["content"].map((sign) =>{
+        {object["content"].map((sign,index) =>{
             switch(sign["sign"]){
                 case "note":
-                    return <Note type={sign["type"]} width="28px" tone={sign["tone"]} className="note"/>
+                    return <Note key={index} type={sign["type"]} width="28px" tone={sign["tone"]} className="note"/>
                 case "pause":
                     return;
             }
@@ -28,28 +28,32 @@ function Signs({object}){
 function Objects({data}){
     return (
     <div className={styles.signs} >
-        {data.map((object) =>{
+        {data.map((object,index) =>{
             switch (object["object"]){
                 case "bar":
                     return (
-                        <div className={styles.bar}>
+                        <div key={index} className={styles.bar}>
                             <Signs object={object}/>
-                            <div class={styles.barLine}></div>
+                            <div className={styles.barLine}></div>
                         </div>
                     )
                 case "clef":
-                    return <Clef type={object["type"]} width="50px" className="clef" />
+                    return <Clef key={index} type={object["type"]} width="50px" className="clef" />
                 case "time":
-                    return <Time type={object["type"]} width="30px" className="time"/>
+                    return <Time key={index} type={object["type"]} width="30px" className="time"/>
             }
         })}
     </div>
     )
 }
-export default function Stave ({data, setData, activeTool}){
+export default function Stave ({data, setData, activeTool, barPointer}){
     function signitureEmerge(top){
         setData(currentData =>{
-            return currentData
+            console.log(currentData)
+
+            return currentData["staves"]+currentData["composition"].map((k) =>{
+                return {...k};
+            })
         })
         //console.log(top);
     }

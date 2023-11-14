@@ -5,70 +5,9 @@
             "type":"treble"
         },
         {
-            "object":"clef",
-            "type":"bass"
-        },
-        {
-            "object":"clef",
-            "type":"alto"
-        },
-        {
-            "object":"time",
-            "type":"44"
-        },
-        {
-            "object":"time",
-            "type":"34"
-        },
-        {
-            "object":"time",
-            "type":"24"
-        },
-        {
-            "object":"time",
-            "type":"64"
-        },
-        {
-            "object":"time",
-            "type":"28"
-        },
-        {
-            "object":"time",
-            "type":"38"
-        },
-        {
-            "object":"time",
-            "type":"48"
-        },
-        {
-            "object":"time",
-            "type":"68"
-        },
-        {
             "object":"bar",
-            "content":[
+            "index":"bar1",
 
-                {
-                    "sign":"note",
-                    "type":"whole",
-                    "tone":4
-                },
-                {
-                    "sign":"note",
-                    "type":"whole",
-                    "tone":5
-        
-                },
-                {
-                    "sign":"note",
-                    "type":"half",
-                    "tone":5
-        
-                }
-            ]
-        },
-        {
-            "object":"bar",
             "RightBarLine":"line",
             "content":[
 

@@ -5,10 +5,12 @@ import json from "../public/composition.json"
 
 export default function WhitePage({activeTool}) {
     const [data,setData]= useState(json);
+    const [barPointer,setBarPointer] = React.useState(0);
+
     return (
         <div className={styles.WhitePage}>
-            {data["Staves"].map(()=>(
-                <Stave setData={setData} data={data} activeTool={activeTool}/>
+            {data["Staves"].map((index)=>(
+                <Stave key={index} setData={setData} data={data} activeTool={activeTool} barPointer={barPointer}/>
             ))}
         </div>
     )
