@@ -1,21 +1,23 @@
 import styles from "../styles/whitepage.module.scss"
 import {Note,Clef,Time} from "./SVG"
 import React from "react"
-function Line({onMouseEnter,tone}){
+function Line({onMouseDown,onMouseEnter,tone}){
     return (
-        <div onMouseEnter={() => onMouseEnter(tone)} className={styles.line}></div>
+        <div onMouseDown={()=>onMouseDown()} onMouseEnter={() => onMouseEnter(tone)} className={styles.line}></div>
     )
 }
-function Space({onMouseEnter,tone}){
+function Space({onMouseDown,onMouseEnter,tone}){
     return (
-        <div onMouseEnter={() => onMouseEnter(tone)} className={styles.space}></div>
+        <div onMouseDown={()=>onMouseDown()} onMouseEnter={() => onMouseEnter(tone)} className={styles.space}></div>
     )
 }
 function Signs({object}){
     return(
         <>
         {object["content"].map((sign,index) =>{
-            switch(sign["sign"]){
+            let typeOfSign = sign["sign"];
+            typeOfSign=typeOfSign.replace("_newSign","")
+            switch(typeOfSign){
                 case "note":
                     return <Note key={index} type={sign["type"]} width="28px" tone={sign["tone"]} className="note"/>
                 case "pause":
@@ -46,50 +48,69 @@ function Objects({data}){
     </div>
     )
 }
-export default function Stave ({data, setData, activeTool, barPointer}){
-    function addNewSigniture(tone){
+export default function Stave ({data, setData, activeTool, barPointer,lastEditedBar}){
+    function updateNewSigniture(tone){
         setData(currentData =>{
-            return {...currentData,"composition":currentData["composition"].map(k=>{
-                if(k["index"]=="bar"+barPointer){
-                    k["content"].push({"sign":"note","type":activeTool,"tone":tone})
+            return {...currentData,"composition":currentData["composition"].map(object=>{   
+                if(object["index"]=="bar"+lastEditedBar){
+                    return {...object,"content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
                 }
-                return k
+                return object;
             })}
-
-        })
+        })// deletes the old inserted sign
+        setData(currentData =>{
+            return {...currentData,"composition":currentData["composition"].map(object=>{
+                
+                if(object["index"]=="bar"+lastEditedBar){
+                }
+                if(object["index"]=="bar"+barPointer){
+                    object["content"].push({"sign":"note_newSign","type":activeTool,"tone":tone});
+                }
+                    return object;
+            })}
+        })//insets new sign
     }
-    function removeNewSigniture(){
-
+    function setFirmly_ontoStave(){
+        setData(currentData =>{
+            return {...currentData,"composition":currentData["composition"].map(object=>{   
+                if(object["index"]=="bar"+lastEditedBar){
+                    return {...object,"content":object["content"].map(sign=>{
+                        return {...sign,"sign":sign["sign"].replace("_newSign","")}
+                    })}
+                }
+                return object;
+            })}
+        })
     }
     return (
         <div className={styles.stave}>
-            <Space onMouseEnter={addNewSigniture} tone={18}/>
-            <Space onMouseEnter={addNewSigniture} tone={17}/>
-            <Space onMouseEnter={addNewSigniture} tone={16}/>
-            <Space onMouseEnter={addNewSigniture} tone={15}/>
-            <Space onMouseEnter={addNewSigniture} tone={14}/>
-            <Space onMouseEnter={addNewSigniture} tone={13}/>
-            <Space onMouseEnter={addNewSigniture} tone={12}/>
-            <Space onMouseEnter={addNewSigniture} tone={11}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={18}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={17}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={16}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={15}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={14}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={13}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={12}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={11}/>
 
-            <Line onMouseEnter={addNewSigniture} tone={10}/>
-            <Space onMouseEnter={addNewSigniture} tone={9}/>
-            <Line onMouseEnter={addNewSigniture} tone={8}/>
-            <Space onMouseEnter={addNewSigniture} tone={7}/>
-            <Line onMouseEnter={addNewSigniture} tone={6}/>
-            <Space onMouseEnter={addNewSigniture} tone={5}/>
-            <Line onMouseEnter={addNewSigniture} tone={4}/>
-            <Space onMouseEnter={addNewSigniture} tone={3}/>
-            <Line onMouseEnter={addNewSigniture} tone={2}/>
+            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={10}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={9}/>
+            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={8}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={7}/>
+            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={6}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={5}/>
+            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={4}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={3}/>
+            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={2}/>
 
-            <Space onMouseEnter={addNewSigniture} tone={1}/>
-            <Space onMouseEnter={addNewSigniture} tone={0}/>
-            <Space onMouseEnter={addNewSigniture} tone={-1}/>
-            <Space onMouseEnter={addNewSigniture} tone={-2}/>
-            <Space onMouseEnter={addNewSigniture} tone={-3}/>
-            <Space onMouseEnter={addNewSigniture} tone={-4}/>
-            <Space onMouseEnter={addNewSigniture} tone={-5}/>
-            <Space onMouseEnter={addNewSigniture} tone={-6}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={1}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={0}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={-1}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={-2}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={-3}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={-4}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={-5}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} tone={-6}/>
             <Objects data={data["composition"]}/>
         </div>
     )

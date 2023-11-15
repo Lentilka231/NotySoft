@@ -74,6 +74,7 @@ export function Note({className,colour="#000000", width,height,type="whole",tone
     }else{
         return(
         <div 
+        onClick={(e)=>{console.log(e)}}
         style={{"top":38.5-(5*tone)+"px"}}
         className={styles[className]}>
             <svg
