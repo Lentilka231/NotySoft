@@ -51,9 +51,10 @@ export default function Stave ({data, setData, activeTool, barPointer}){
         setData(currentData =>{
             console.log(currentData)
 
-            return currentData["staves"]+currentData["composition"].map((k) =>{
-                return {...k};
-            })
+            return currentData.filter(i =>{
+                ["composition"].map((k) =>{
+                    return {...k};
+                })})
         })
         //console.log(top);
     }
