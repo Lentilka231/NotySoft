@@ -7,20 +7,17 @@
         {
             "object":"bar",
             "index":"bar1",
-
             "RightBarLine":"line",
             "content":[
-
                 {
                     "sign":"note",
                     "type":"whole",
-                    "tone":4
+                    "tone":1
                 },
                 {
                     "sign":"note",
                     "type":"whole",
                     "tone":5
-        
                 }
             ]
         }
