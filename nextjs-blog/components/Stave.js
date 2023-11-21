@@ -3,12 +3,12 @@ import {Note,Clef,Time} from "./SVG"
 import React from "react"
 function Line({onMouseDown,onMouseEnter,tone}){
     return (
-        <div onMouseDown={()=>onMouseDown()} onMouseEnter={() => onMouseEnter(tone)} className={styles.line}></div>
+        <div onMouseDown={()=>onMouseDown()} onClick={()=>{console.log("onClick")}} onMouseEnter={() => onMouseEnter(tone)} className={styles.line}></div>
     )
 }
 function Space({onMouseDown,onMouseEnter,tone}){
     return (
-        <div onMouseDown={()=>onMouseDown()} onMouseEnter={() => onMouseEnter(tone)} className={styles.space}></div>
+        <div onMouseDown={()=>onMouseDown()} onClick={()=>{console.log("onClick")}} onMouseEnter={() => onMouseEnter(tone)} className={styles.space}></div>
     )
 }
 function Signs({object}){
@@ -71,6 +71,7 @@ export default function Stave ({data, setData, activeTool, barPointer,lastEdited
         })//insets new sign
     }
     function setFirmly_ontoStave(){
+        console.log("OnMouseDown");
         setData(currentData =>{
             return {...currentData,"composition":currentData["composition"].map(object=>{   
                 if(object["index"]=="bar"+lastEditedBar){
