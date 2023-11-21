@@ -31,6 +31,9 @@ $darkGrey2:#333533;
     display:inline-block;
     position:relative;
 }
+.rotatenote{
+    transform:rotate(90deg)
+}
 .helpLines{
     position: absolute;
     top:-25px;

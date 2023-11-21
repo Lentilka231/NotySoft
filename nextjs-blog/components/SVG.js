@@ -7,37 +7,25 @@ function HelpLines({tone}){
         for(let i = 0; i>=tone; i-=2){
             iterator[-i/2]=-i/2
         }
-        return(
-            <>
-                {iterator.map((i)=>(
-                    <line 
-                    style={{"stroke":"black","stroke-width":"10"}}
-                    x1="30" y1={255-i*72+(tone%2==0?0:-37)+"px"}
-                    x2="180" y2={255-i*72+(tone%2==0?0:-37)+"px"}
-                    />
-                ))}
-            </>
-        )
-    } else if(tone>11){
+    }else if(tone>11){
         for(let i = 0; i<=(tone-12); i+=2){
             iterator[i/2]=i/2
         }
+    }
         return(
             <>
                 {iterator.map((i)=>(
                     <line 
                     style={{"stroke":"black","stroke-width":"10"}}
-                    x1="30" y1={255+i*72+(tone%2==0?0:37)+"px"}
-                    x2="180" y2={255+i*72+(tone%2==0?0:37)+"px"}
+                    x1="30" y1={257-i*75+(tone%2==0?0:-37)+"px"}
+                    x2="180" y2={257-i*75+(tone%2==0?0:-37)+"px"}
                     />
                 ))}
             </>
         )
-    }else{
-        return
-    }
+     
 }
-export function Note({className,colour="#000000", width,height,type="whole",tone=1,setNewActiveTool}){
+export function Note({className,colour="#000000",type, width,height,setNewActiveTool,data}){
     switch (colour){
         case "orange":
             colour="#f7a800"
@@ -74,19 +62,19 @@ export function Note({className,colour="#000000", width,height,type="whole",tone
     }else{
         return(
         <div 
-        onClick={(e)=>{console.log(e)}}
-        style={{"top":38.5-(5*tone)+"px"}}
-        className={styles[className]}>
+        id={data["id"]}
+        style={{"top":data.tone>5?9.5-(5*data.tone)+"px":38.5-(5*data.tone)+"px",
+                "transform":data.tone>5?"rotate(180deg)":"rotate(0deg)",
+                "margin-left":data.marginLeft}}
+        className={styles[className]}>      
             <svg
-            
             height={height}
             width={width}
             viewBox="0 0 210 700">
                 <path
-                
                 style={{"fill":colour}}
                 d={d}/>            
-                <HelpLines tone={tone}/>
+                <HelpLines tone={data.tone}/>
             </svg>
         </div>
         )   

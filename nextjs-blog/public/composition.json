@@ -12,12 +12,16 @@
                 {
                     "sign":"note",
                     "type":"whole",
-                    "tone":1
+                    "tone":1,
+                    "marginLeft":100,
+                    "id":1
                 },
                 {
                     "sign":"note",
                     "type":"whole",
-                    "tone":5
+                    "tone":5,
+                    "marginLeft":100,
+                    "id":2
                 }
             ]
         }
