@@ -1,21 +1,19 @@
 import styles from "../styles/whitepage.module.scss"
 import {Note,Clef,Time} from "./SVG"
 import React from "react"
-function Line({onMouseDown,onMouseEnter,onMouseMove,tone}){
+function Line({onMouseDown,onMouseMove,tone}){
     return (
         <div onMouseDown={()=>onMouseDown()}
-             onMouseEnter={(e) => onMouseEnter(e,tone)}
-             onMouseMove={(e)=>onMouseMove(e)} 
+             onMouseMove={(e)=>onMouseMove(e,tone)} 
              className={styles.space}>
             <div className={styles.line}></div>
         </div>
     )
 }
-function Space({onMouseDown,onMouseEnter,onMouseMove,tone}){
+function Space({onMouseDown,onMouseMove,tone}){
     return (
         <div onMouseDown={()=>onMouseDown()}
-             onMouseEnter={(e) => onMouseEnter(e,tone)}
-             onMouseMove={(e)=>onMouseMove(e)}
+             onMouseMove={(e)=>onMouseMove(e,tone)}
              className={styles.space}></div>
     )
 }
@@ -56,8 +54,8 @@ function Objects({data}){
     </div>
     )
 }
-export default function Stave ({data, setData, activeTool, barPointer,lastEditedBar,setLastEditedBar,lastID,setLastID}){
-    function updateNewSigniture(event,tone){
+export default function Stave ({data, setData, activeTool, barPointer,lastEditedBar,setLastEditedBar,newestID,setNewestID}){
+    function updateCoordinatesOfNewSigniture(event,tone) {
         if(activeTool!=null){
             setData(currentData =>{
                 return {...currentData,"composition":currentData["composition"].map(object=>{   
@@ -73,32 +71,20 @@ export default function Stave ({data, setData, activeTool, barPointer,lastEdited
                         if(object["index"]=="bar"+lastEditedBar["bar"]){
                         }
                         if(object["index"]=="bar"+barPointer){
-                            console.log(object["content"].at(-1)["id"],document.getElementById(object["content"].at(-1)["id"]))
-                            let coordinates = document.getElementById(object["content"].at(-1)["id"]).getBoundingClientRect();
-                            let x = event.clientX-coordinates.left-(coordinates.width)
-                            object["content"].push({"sign":"note_newSign","type":activeTool,"tone":tone,"id":lastID,"marginLeft":x>0?x:0});
+                            let idofLastSignInBar = object["content"].at(-1)["id"]
+                            let coordinates = document.getElementById(idofLastSignInBar).getBoundingClientRect();
+                            let x = event.clientX-coordinates.left-42;
+                            object["content"].push({
+                                "sign":"note_newSign",
+                                "type":activeTool,
+                                "tone":tone,
+                                "id":newestID,
+                                "marginLeft":x>0?x:0});
                         }
                         return object;
                     })}
             })//insets new sign
-            setLastEditedBar({"bar":1,"sign":lastID})
-        }
-
-    }
-    function updateCoordinatesOfNewSigniture(event) {
-        if(activeTool){
-            setData(currentData =>{
-                return {...currentData,"composition":currentData["composition"].map(object=>{
-                
-                    if(object["index"]=="bar"+lastEditedBar["bar"]){
-                        //console.log("nastane to tu? aspoň",document.getElementById(3).getBoundingClientRect())
-                        //let x = event.clientX-coordinates.left-(coordinates.width)
-                        //object["content"][lastEditedBar["sign"]]["marginLeft"]+=x>0?x:0;
-                    }
-
-                    return object;
-                })}
-            })//insets new sign
+            setLastEditedBar({"bar":1,"sign":newestID})
         }
     }
     function setFirmly_ontoStave(){
@@ -112,37 +98,37 @@ export default function Stave ({data, setData, activeTool, barPointer,lastEdited
                 return object;
             })}
         })
-        setLastID(lastID+1)
+        setNewestID(newestID+1)
     }
     return (
         <div className={styles.stave}>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={18}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={17}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={16}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={15}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={14}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={13}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={12}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={11}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={18}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={17}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={16}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={15}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={14}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={13}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={12}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={11}/>
 
-            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={10}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={9}/>
-            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={8}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={7}/>
-            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={6}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={5}/>
-            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={4}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={3}/>
-            <Line  onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={2}/>
+            <Line  onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={10}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={9}/>
+            <Line  onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={8}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={7}/>
+            <Line  onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={6}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={5}/>
+            <Line  onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={4}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={3}/>
+            <Line  onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={2}/>
 
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={1}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={0}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={-1}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={-2}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={-3}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={-4}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={-5}/>
-            <Space onMouseDown={setFirmly_ontoStave} onMouseEnter={updateNewSigniture} onMouseMove={updateCoordinatesOfNewSigniture} tone={-6}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={1}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={0}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-1}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-2}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-3}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-4}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-5}/>
+            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-6}/>
             <Objects data={data["composition"]}/>
         </div>
     )

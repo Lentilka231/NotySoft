@@ -13,14 +13,14 @@
                     "sign":"note",
                     "type":"whole",
                     "tone":1,
-                    "marginLeft":100,
+                    "marginLeft":0,
                     "id":1
                 },
                 {
                     "sign":"note",
                     "type":"whole",
                     "tone":5,
-                    "marginLeft":100,
+                    "marginLeft":0,
                     "id":2
                 }
             ]

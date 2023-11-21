@@ -6,8 +6,8 @@ import json from "../public/composition.json"
 export default function WhitePage({activeTool}) {
     const [data,setData]= useState(json);
     const [barPointer,setBarPointer] = React.useState(1);
-    const [lastEditedBar,setLastEditedBar] = React.useState({"bar":1,"sign":3});
-    const [lastID,setLastID]=React.useState(3);
+    const [lastEditedBar,setLastEditedBar] = React.useState({"bar":1,"sign":2});
+    const [newestID,setNewestID]=React.useState(3);
     return (
         <div className={styles.WhitePage}>
             {data["Staves"].map((index)=>(
@@ -18,8 +18,8 @@ export default function WhitePage({activeTool}) {
                     barPointer={barPointer}
                     lastEditedBar={lastEditedBar}
                     setLastEditedBar={setLastEditedBar}
-                    lastID={lastID}
-                    setLastID={setLastID}
+                    newestID={newestID}
+                    setNewestID={setNewestID}
                     />
             ))}
         </div>
