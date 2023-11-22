@@ -16,3 +16,9 @@ $darkGrey2:#333533;
     grid-template-columns: repeat(4,30px);
     padding:15px;
 }
+#activeTool{
+    background-color: $yellowishOrange;
+    path{
+        fill:black;
+    }
+}

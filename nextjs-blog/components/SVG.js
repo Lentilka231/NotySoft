@@ -49,8 +49,9 @@ export function Note({className,colour="#000000",type, width,height,setNewActive
     if(className=="noteInToolBar"){
         return(
                 <svg
+                id={"toolNote_"+type}
                 className={styles[className]}
-                onClick={()=>setNewActiveTool(type)}
+                onClick={(e)=>setNewActiveTool(e.target)}
                 height={height}
                 width={width}
                 viewBox="0 0 210 297">

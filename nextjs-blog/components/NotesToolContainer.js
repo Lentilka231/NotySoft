@@ -1,10 +1,12 @@
 import styles from "../styles/navbar.module.scss"
 import {Note} from "./SVG"
 
-export default function NotesToolContainer ({setActiveTool}){
-    function setNewActiveTool(toolName){
+export default function NotesToolContainer ({setActiveTool,resetActiveTool}){
+    function setNewActiveTool(target){
+        let toolName = target.id.substring(target.id.indexOf("_")+1);
+        resetActiveTool();
         setActiveTool(toolName);
-        console.log("using "+toolName);
+        target.id=styles.activeTool;
     }
     return (
         <div className={styles.toolContainer}>
