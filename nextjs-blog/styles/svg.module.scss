@@ -8,11 +8,20 @@ $darkGrey2:#333533;
     cursor: pointer;
     padding:1px;
     border-radius: 3px;
+    path{
+        fill:white;
+    }
     &:hover{
         background-color: $yellowishOrange;
     }
     &:hover path{
-        fill:$darkGrey1 !important;
+        fill:$darkGrey1;
+    }
+}
+.activeTool{
+    background-color: $yellowishOrange;
+    path{
+        fill:black; 
     }
 }
 .clef{

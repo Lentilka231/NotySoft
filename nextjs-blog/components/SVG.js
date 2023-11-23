@@ -1,5 +1,4 @@
 import styles from "../styles/svg.module.scss"
-
 function HelpLines({tone}){
     let iterator = [];
     
@@ -25,7 +24,7 @@ function HelpLines({tone}){
         )
      
 }
-export function Note({className,colour="#000000",type, width,height,setNewActiveTool,data}){
+export function Note({className,colour="#000000",type, width,height,setNewActiveTool,data,activeToolList}){
     switch (colour){
         case "orange":
             colour="#f7a800"
@@ -50,13 +49,12 @@ export function Note({className,colour="#000000",type, width,height,setNewActive
         return(
                 <svg
                 id={"toolNote_"+type}
-                className={styles[className]}
+                className={(activeToolList["toolNote_"+type]?styles["activeTool"]:"")+" "+styles[className]}
                 onClick={(e)=>setNewActiveTool(e.target)}
                 height={height}
                 width={width}
                 viewBox="0 0 210 297">
                     <path
-                    style={{"fill":colour}}
                     d={d}/>            
                 </svg>
             )   

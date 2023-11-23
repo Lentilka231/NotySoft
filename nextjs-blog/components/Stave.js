@@ -1,18 +1,20 @@
 import styles from "../styles/whitepage.module.scss"
 import {Note,Clef,Time} from "./SVG"
 import React from "react"
-function Line({onMouseDown,onMouseMove,tone}){
+function Line({onMouseDown,onMouseMove,onMouseLeave,tone}){
     return (
         <div onMouseDown={()=>onMouseDown()}
-             onMouseMove={(e)=>onMouseMove(e,tone)} 
+             onMouseMove={(e)=>onMouseMove(e,tone)}
+             onMouseLeave={onMouseLeave?()=>onMouseLeave():null} 
              className={styles.space}>
             <div className={styles.line}></div>
         </div>
     )
 }
-function Space({onMouseDown,onMouseMove,tone}){
+function Space({onMouseDown,onMouseMove,onMouseLeave,tone}){
     return (
         <div onMouseDown={()=>onMouseDown()}
+             onMouseLeave={onMouseLeave?()=>onMouseLeave():null} 
              onMouseMove={(e)=>onMouseMove(e,tone)}
              className={styles.space}></div>
     )
@@ -55,16 +57,20 @@ function Objects({data}){
     )
 }
 export default function Stave ({data, setData, activeTool, barPointer,lastEditedBar,setLastEditedBar,newestID,setNewestID}){
+    function deleteSign(){
+        setData(currentData =>{
+            return {...currentData,"composition":currentData["composition"].map(object=>{   
+                if(object["index"]=="bar"+lastEditedBar["bar"]){
+                    return {...object,"content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
+                }
+                return object;
+            })}
+        })
+    }
     function updateCoordinatesOfNewSigniture(event,tone) {
         if(activeTool!=null){
-            setData(currentData =>{
-                return {...currentData,"composition":currentData["composition"].map(object=>{   
-                    if(object["index"]=="bar"+lastEditedBar["bar"]){
-                        return {...object,"content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
-                    }
-                    return object;
-                })}
-            })// deletes the old inserted sign
+            deleteSign();
+            // deletes the old inserted sign
             setData(currentData =>{
                     return {...currentData,"composition":currentData["composition"].map(object=>{
                         
@@ -87,6 +93,9 @@ export default function Stave ({data, setData, activeTool, barPointer,lastEdited
             setLastEditedBar({"bar":1,"sign":newestID})
         }
     }
+    function onMouseLeave(){
+        deleteSign();
+    }
     function setFirmly_ontoStave(){
         setData(currentData =>{
             return {...currentData,"composition":currentData["composition"].map(object=>{   
@@ -102,7 +111,7 @@ export default function Stave ({data, setData, activeTool, barPointer,lastEdited
     }
     return (
         <div className={styles.stave}>
-            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={18}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture} tone={18}/>
             <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={17}/>
             <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={16}/>
             <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={15}/>
@@ -128,7 +137,7 @@ export default function Stave ({data, setData, activeTool, barPointer,lastEdited
             <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-3}/>
             <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-4}/>
             <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-5}/>
-            <Space onMouseDown={setFirmly_ontoStave}  onMouseMove={updateCoordinatesOfNewSigniture} tone={-6}/>
+            <Space onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture} tone={-6}/>
             <Objects data={data["composition"]}/>
         </div>
     )
