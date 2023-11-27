@@ -13,8 +13,9 @@ function HelpLines({tone}){
     }
         return(
             <>
-                {iterator.map((i)=>(
+                {iterator.map((i,n)=>(
                     <line 
+                    key={n}
                     style={{"stroke":"black","stroke-width":"10"}}
                     x1="30" y1={257-i*75+(tone%2==0?0:-37)+"px"}
                     x2="180" y2={257-i*75+(tone%2==0?0:-37)+"px"}
@@ -62,7 +63,7 @@ export function Note({className,colour="#000000",type, width,height,setNewActive
         return(
         <div 
         id={data["id"]}
-        style={{"top":data.tone>5?9.5-(5*data.tone)+"px":38.5-(5*data.tone)+"px",
+        style={{"top":data.tone>5?29-(5*data.tone)+"px":58-(5*data.tone)+"px",
                 "transform":data.tone>5?"rotate(180deg)":"rotate(0deg)",
                 "margin-left":data.marginLeft}}
         className={styles[className]}>      

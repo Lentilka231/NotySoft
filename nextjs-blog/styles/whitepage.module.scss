@@ -12,7 +12,7 @@
 .stave{
     position: relative;
     width:100%;
-    height:8%;
+    height:fit-content;
 }
 .line{
     height:1px;
@@ -23,24 +23,29 @@
 .space{
     width:100%;
     height:5px;
+    z-index: 5;
 }
 .signs{
+    z-index:-1;
     position: absolute;
     height:100%;
     top:0px;
-    z-index: -1;
+    display:flex;
+    align-items: stretch;
 
 }
 .bar{
     display:inline-block;
     position: relative;
-    min-width:fit-content;
+    min-width: 100px;
+    flex-grow:1;
 }
 .barLine{
+    z-index:35;
     width:1px;
     height:40px;
     position:absolute;
-    top: 23px;
+    top: 42px;
     right:0px;
     background-color: black;
 }
