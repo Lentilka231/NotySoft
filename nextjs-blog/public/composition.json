@@ -11,8 +11,7 @@
             "RightBarLine":"line",
             "content":[
                 {
-                    "sign":"note",
-                    "type":"whole",
+                    "sign":"note_whole",
                     "tone":1,
                     "marginLeft":0,
                     "id":1

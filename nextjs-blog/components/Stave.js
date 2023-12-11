@@ -40,7 +40,7 @@ function Objects({data,setBarPointer}){
     let len=0;
     function lastSeenBar(barIndex){
         setBarPointer(barIndex);
-        console.log("banán",barIndex);
+        // console.log("banán",barIndex);
     }
     return (
     <div className={styles.signs} >
@@ -108,15 +108,12 @@ export default function Stave ({fromTo,data, setData, activeTool, barPointer, se
                                 x=event.clientX-coordinates.left-12;
                             }
                             let filledplace = fillSpaceInBar(object["content"]);
-
-                            //console.log(object["width"],x+28+filledplace);
                             if(x+28+filledplace+(-x>0?-x:0)>100){
                                 object["width"]=filledplace+x+28+(-x>0?-x:0);
-                                console.log(x+28,filledplace,-x);
+                                // console.log(x+28,filledplace,-x);
                             }
                             object["content"].push({
-                                "sign":"note_newSign",
-                                "type":activeTool,
+                                "sign":activeTool+"_newSign",
                                 "tone":tone,
                                 "id":newestID,
                                 "marginLeft":x>0?x:0});

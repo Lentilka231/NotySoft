@@ -47,11 +47,12 @@ export function Note({className,colour="#000000",type, width,height,setNewActive
             break;
     }
     if(className=="noteInToolBar"){
+        console.log("to co mě zajímá",activeToolList)
         return(
                 <svg
                 id={"toolNote_"+type}
                 className={(activeToolList["toolNote_"+type]?styles["activeTool"]:"")+" "+styles[className]}
-                onClick={(e)=>setNewActiveTool(e.target)}
+                onClick={(e)=>setNewActiveTool(e.target.id)}
                 height={height}
                 width={width}
                 viewBox="0 0 210 297">

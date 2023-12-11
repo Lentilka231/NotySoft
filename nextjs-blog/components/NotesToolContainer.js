@@ -2,18 +2,21 @@ import styles from "../styles/navbar.module.scss"
 import {Note} from "./SVG"
 
 export default function NotesToolContainer ({setActiveTool,activeToolList}){
-    function setNewActiveTool(target){
-        let toolName = target.id.substring(target.id.indexOf("_")+1);
-        setActiveTool(toolName); // this says what type of tool are we using
-        
+    function setNewActiveTool(toolName){
+        let newSetting = !activeToolList[0][toolName]
+        //let toolName = toolName.substring(toolName.indexOf("_")+1);
+        setActiveTool(toolName,toolName.substring(toolName.indexOf("_")+1)); // this says what type of tool you are going to use
+        console.log(toolName);
         //just for decoration (turns yellow active tool)
         activeToolList[1](currentData =>{
             Object.keys(currentData).forEach(key=>{
                 currentData[key]=false;
             })
-            currentData[target.id]=true;
+            currentData[toolName]=newSetting;
+            console.log("hello");
             return currentData;
         })
+        console.log("ttmtz",activeToolList[0]);
     }
     return (
         <div className={styles.toolContainer}>
