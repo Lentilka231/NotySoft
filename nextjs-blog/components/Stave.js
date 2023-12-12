@@ -41,13 +41,9 @@ function JSXfromSign({object}){
         </>
     )
 }
-function MusicalObjectsOnStave({data, setBarPointer}){
+function MusicalObjectsOnStave({data}){
     const STAVE_WIDTH_LEGTH=970;
     let len=0;
-    function lastSeenBar(barIndex){
-        setBarPointer(barIndex);
-        // console.log("banán",barIndex);
-    }
     return (
     <div className={styles.signs} >
         {data.map((object,index) =>{
@@ -59,9 +55,7 @@ function MusicalObjectsOnStave({data, setBarPointer}){
                         <div key={index} 
                         id={object["index"]} 
                         style={{"width":barWidth+"px"}} 
-                        onMouseMove={()=>lastSeenBar(object["index"].substring(3))} 
                         className={styles.bar}>
-
                             <JSXfromSign object={object}/>
                             <div className={styles.barLine}></div>
                         </div>
@@ -77,57 +71,94 @@ function MusicalObjectsOnStave({data, setBarPointer}){
     </div>
     )
 }
-export default function Stave ({fromTo, data, setData, activeTool, barPointer, setBarPointer, lastEditedBar, setLastEditedBar, newestID, setNewestID}){
+export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar, setLastEditedBar, newestID, setNewestID,compositionSettings}){
     function fillSpaceInBar(barObject){
-        let filledplace=0;
+        let filledSpace=0;
         for(let i=0;i<barObject.length;i++){
-            filledplace+=28+barObject[i]["marginLeft"];
+            filledSpace+=28+barObject[i]["marginLeft"];
         }
-        return filledplace;
+        return filledSpace;
     }
     function deleteSign(){
+        // use to delete sign which is no yet in composition firmly set (-> deleting sign witch has sufix _newSign)
         setData(currentData =>{
             return {...currentData,"composition":currentData["composition"].map(object=>{   
                 if(object["index"]=="bar"+lastEditedBar["bar"]){
-                    return {...object,"content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
+                    let width=object["width"];
+                    let delSign=object["content"].filter(sign => (sign["sign"].includes("_newSign")));
+                    if(delSign.length>0){
+                        let delSignWidth = delSign[0].marginLeft+24;
+                        if(object["width"]-delSignWidth>compositionSettings["bar-min-width"]){
+                            width=object["width"]-delSignWidth;
+                        }else{
+                            width=compositionSettings["bar-min-width"];
+                        }
+                    }
+                    return {...object,width,"content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
                 }
                 return object;
             })}
         })
     }
     function updateCoordinatesOfNewSigniture(event,tone) {
-        if(activeTool!=null){
+        let allElementsPointedByCursor = document.elementsFromPoint(event.clientX,event.clientY);
+        let pointedBar = allElementsPointedByCursor.filter(elem =>elem.id.includes("bar"))[0]
+        if(activeTool!=null && pointedBar){
             deleteSign();
+            let pointedBarNumber = pointedBar.id.replace("bar","");
             // deletes the old inserted sign
             setData(currentData =>{
+                    let width, content;
                     return {...currentData,"composition":currentData["composition"].map(object=>{
-                        if(object["index"]=="bar"+barPointer){
-                            let idofLastSignInBar, x, coordinates;
+                        if(object["index"]=="bar"+pointedBarNumber){
+
+                            let idofLastSignInBar, leftSideDistance, coordinates;
                             if(object["content"].at(-1)){
                                 //if the bar already contains a sign then get the distance from that sign
                                 idofLastSignInBar = object["content"].at(-1)["id"]
                                 coordinates = document.getElementById(idofLastSignInBar).getBoundingClientRect();
-                                x = event.clientX-coordinates.left-42;
+                                leftSideDistance = event.clientX-coordinates.left-42;
                             }else{ 
                                 //otherwise get it from left border of bar
-                                coordinates = document.getElementById("bar"+barPointer).getBoundingClientRect();
-                                x=event.clientX-coordinates.left-12;
+                                coordinates = document.getElementById("bar"+pointedBarNumber).getBoundingClientRect();
+                                leftSideDistance=event.clientX-coordinates.left-12;
                             }
-                            let filledplace = fillSpaceInBar(object["content"]);
-                            if(x+28+filledplace+(-x>0?-x:0)>100){
-                                object["width"]=filledplace+x+28+(-x>0?-x:0);
-                                // console.log(x+28,filledplace,-x);
+
+                            
+                            let filledSpace = fillSpaceInBar(object["content"]);
+                            let newFilledSpace = leftSideDistance+28+filledSpace+(-leftSideDistance>0?-leftSideDistance:0);
+                            let marginLeft;
+                            // preparing new width for bar
+                            if(newFilledSpace>compositionSettings["bar-min-width"]){
+                                
+                                //freesSpace is distance between filledspace+newsign (without leftmargin) and 15px after end
+                                let freeSpace = compositionSettings["bar-min-width"]-newFilledSpace+leftSideDistance;
+                                freeSpace=freeSpace>0?freeSpace+15:15;
+
+                                if (leftSideDistance>freeSpace){
+                                    width = newFilledSpace-leftSideDistance+(freeSpace>0?freeSpace:15);
+                                    marginLeft = freeSpace>0?freeSpace:15;
+                                }else{
+                                    width = newFilledSpace;
+                                    marginLeft = leftSideDistance>0?leftSideDistance:0
+                                }
+                            }else{
+                                width = compositionSettings["bar-min-width"];
+                                marginLeft = leftSideDistance>0?leftSideDistance:0
                             }
-                            object["content"].push({
+                            //making a copied object width new sign;
+                            content = [...object["content"]];
+                            content.push({
                                 "sign":activeTool+"_newSign",
                                 "tone":tone,
                                 "id":newestID,
-                                "marginLeft":x>0?x:0});
+                                "marginLeft":marginLeft});
+                            return {...object,width,content};
                         }
                         return object;
                     })}
             })//insets new sign
-            setLastEditedBar({"bar":barPointer,"sign":newestID})
+            setLastEditedBar({"bar":pointedBarNumber,"sign":newestID})
         }
     }
     function onMouseLeave(){
@@ -176,7 +207,7 @@ export default function Stave ({fromTo, data, setData, activeTool, barPointer, s
             <Space tone={-4} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
             <Space tone={-5} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
             <Space tone={-6} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <MusicalObjectsOnStave data={portionOfNeededData} setBarPointer={setBarPointer}/>
+            <MusicalObjectsOnStave data={portionOfNeededData}/>
         </div>
     )
 }

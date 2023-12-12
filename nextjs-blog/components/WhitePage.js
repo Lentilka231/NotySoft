@@ -5,8 +5,8 @@ import json from "../public/composition.json"
 
 export default function WhitePage({activeTool}) {
     const [data,setData]= useState(json);
+    const [compositionSettings,setCompositionSettings]=React.useState(data["settings"]);
     
-    const [barPointer,setBarPointer] = React.useState(2);
     const [lastEditedBar,setLastEditedBar] = React.useState({"bar":null,"sign":null});
     const [newestID,setNewestID]=React.useState(data["newestID"]);
     
@@ -20,12 +20,11 @@ export default function WhitePage({activeTool}) {
                             data={data}
                             fromTo={fromTo}
                             activeTool={activeTool}
-                            barPointer={barPointer}
-                            setBarPointer={setBarPointer}
                             lastEditedBar={lastEditedBar}
                             setLastEditedBar={setLastEditedBar}
                             newestID={newestID}
                             setNewestID={setNewestID}
+                            compositionSettings={compositionSettings}
                             />)                            
                     }
                 })}
