@@ -25,7 +25,7 @@ function HelpLines({tone}){
         )
      
 }
-export function Note({className,colour="#000000",type, width,height,setNewActiveTool,data,activeToolList}){
+export function Note({className, colour="#000000", type, width, height, setNewActiveTool, data, activeToolList}){
     switch (colour){
         case "orange":
             colour="#f7a800"
@@ -47,11 +47,10 @@ export function Note({className,colour="#000000",type, width,height,setNewActive
             break;
     }
     if(className=="noteInToolBar"){
-        console.log("to co mě zajímá",activeToolList)
         return(
                 <svg
-                id={"toolNote_"+type}
-                className={(activeToolList["toolNote_"+type]?styles["activeTool"]:"")+" "+styles[className]}
+                id={"note_"+type}
+                className={(activeToolList["note_"+type]?styles["activeTool"]:"")+" "+styles[className]}
                 onClick={(e)=>setNewActiveTool(e.target.id)}
                 height={height}
                 width={width}
@@ -81,7 +80,7 @@ export function Note({className,colour="#000000",type, width,height,setNewActive
         )   
     }
 }
-export function Clef({className,colour="#000000", width, height, type="treble"}){
+export function Clef({className, colour="#000000", width, height, type="treble"}){
     let d ="";
     switch (type){
         case "treble":
@@ -109,7 +108,7 @@ export function Clef({className,colour="#000000", width, height, type="treble"})
     )
 }
 
-export function Time({className,colour="#000000", width, height, type="44"}){
+export function Time({className, colour="#000000", width, height, type="44"}){
     let d="";
     switch(type){
         case "24":

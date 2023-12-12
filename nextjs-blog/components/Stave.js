@@ -19,15 +19,21 @@ function Space({onMouseDown,onMouseMove,onMouseLeave,tone}){
              className={styles.space}></div>
     )
 }
-function Signs({object}){
+function JSXfromSign({object}){
+    function getSignCategory(sign){
+        return sign.substring(0,sign.search("_"));
+    }
+    function getSignType(sign){
+        return sign.substring(sign.search("_")+1); 
+    }
     return(
         <>
         {object["content"].map((sign,index) =>{
-            let typeOfSign = sign["sign"];
-            typeOfSign=typeOfSign.replace("_newSign","")
-            switch(typeOfSign){
+            let signName = sign["sign"];
+            signName=signName.replace("_newSign","")
+            switch(getSignCategory(signName)){
                 case "note":
-                    return <Note key={index} data={{...sign}} type={sign["type"]} width="28px" tone={sign["tone"]} marginLeft={sign["marginLeft"]} className="note"/>
+                    return <Note key={index} data={{...sign}} type={getSignType(signName)} width="28px" tone={sign["tone"]} marginLeft={sign["marginLeft"]} className="note"/>
                 case "pause":
                     return;
             }
@@ -35,7 +41,7 @@ function Signs({object}){
         </>
     )
 }
-function Objects({data,setBarPointer}){
+function MusicalObjectsOnStave({data, setBarPointer}){
     const STAVE_WIDTH_LEGTH=970;
     let len=0;
     function lastSeenBar(barIndex){
@@ -56,7 +62,7 @@ function Objects({data,setBarPointer}){
                         onMouseMove={()=>lastSeenBar(object["index"].substring(3))} 
                         className={styles.bar}>
 
-                            <Signs object={object}/>
+                            <JSXfromSign object={object}/>
                             <div className={styles.barLine}></div>
                         </div>
                     )
@@ -71,7 +77,7 @@ function Objects({data,setBarPointer}){
     </div>
     )
 }
-export default function Stave ({fromTo,data, setData, activeTool, barPointer, setBarPointer, lastEditedBar, setLastEditedBar, newestID, setNewestID}){
+export default function Stave ({fromTo, data, setData, activeTool, barPointer, setBarPointer, lastEditedBar, setLastEditedBar, newestID, setNewestID}){
     function fillSpaceInBar(barObject){
         let filledplace=0;
         for(let i=0;i<barObject.length;i++){
@@ -170,7 +176,7 @@ export default function Stave ({fromTo,data, setData, activeTool, barPointer, se
             <Space tone={-4} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
             <Space tone={-5} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
             <Space tone={-6} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Objects data={portionOfNeededData} setBarPointer={setBarPointer}/>
+            <MusicalObjectsOnStave data={portionOfNeededData} setBarPointer={setBarPointer}/>
         </div>
     )
 }
