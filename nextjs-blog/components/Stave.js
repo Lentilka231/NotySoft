@@ -33,7 +33,14 @@ function JSXfromSign({object}){
             signName=signName.replace("_newSign","")
             switch(getSignCategory(signName)){
                 case "note":
-                    return <Note key={index} data={{...sign}} type={getSignType(signName)} width="28px" tone={sign["tone"]} marginLeft={sign["marginLeft"]} className="note"/>
+                    return <Note 
+                                key={index} 
+                                data={{...sign}} 
+                                type={getSignType(signName)}
+                                width="28px" 
+                                tone={sign["tone"]} 
+                                marginLeft={sign["marginLeft"]} 
+                                className="note"/>
                 case "pause":
                     return;
             }
@@ -102,8 +109,9 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
     }
     function updateCoordinatesOfNewSigniture(event,tone) {
         let allElementsPointedByCursor = document.elementsFromPoint(event.clientX,event.clientY);
-        console.log(allElementsPointedByCursor);
-        let pointedBar = allElementsPointedByCursor.filter(elem =>elem.id.includes("bar"))[0]
+        let pointedSigns = allElementsPointedByCursor.filter(elem => elem.id.includes("sign"))
+        //console.log(pointedSign);
+        let pointedBar = allElementsPointedByCursor.filter(elem => elem.id.includes("bar"))[0]
         //if user has selected tool and we know bar he is pointing at then...
         if(activeTool!=null && pointedBar){
             // deletes the old inserted sign
@@ -117,8 +125,8 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
                             let idofLastSignInBar, leftSideDistance, coordinates;
                             if(object["content"].at(-1)){
                                 //if the bar already contains a sign then get the distance from that sign
-                                idofLastSignInBar = object["content"].at(-1)["id"]
-                                coordinates = document.getElementById(idofLastSignInBar).getBoundingClientRect();
+                                idofLastSignInBar = object["content"].at(-1)["id"];
+                                coordinates = document.getElementById("sign"+idofLastSignInBar).getBoundingClientRect();
                                 leftSideDistance = event.clientX-coordinates.left-42;
                             }else{ 
                                 //otherwise get it from left border of bar
@@ -148,9 +156,25 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
                                 width = compositionSettings["bar-min-width"];
                                 marginLeft = leftSideDistance>0?leftSideDistance:0
                             }
+                            let pointedForeignSignID=0;
+                            let positionInBar=object["content"].length;
+                            pointedSigns.forEach((elem,i)=>{
+                                let idOfSign = elem.id.replace("sign","")
+                                if(idOfSign != newestID){
+                                    pointedForeignSignID = idOfSign;
+                                }
+                            })
+                            if(pointedForeignSignID){
+                                for(let i=0;i<object["content"].length;i++){
+                                    if(object["content"][i].id==pointedForeignSignID){
+                                        positionInBar=i
+                                    }
+                                }
+                                console.log(pointedForeignSignID);
+                            }
                             //making a copied object width new sign;
                             content = [...object["content"]];
-                            content.push({
+                            content.splice(positionInBar,0,{
                                 "sign":activeTool+"_newSign",
                                 "tone":tone,
                                 "id":newestID,

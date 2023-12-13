@@ -62,17 +62,18 @@ export function Note({className, colour="#000000", type, width, height, setNewAc
     }else{
         return(
             <div
-                id={data["id"]}
+                id={"sign"+data["id"]}
                 style={{"height":"100%",
                         "width":"fit-content",
                         "marginLeft":data.marginLeft}}
                 className={styles[className]}>
-                <div 
-                
-                style={{"top":data.tone>5?29-(5*data.tone)+"px":58-(5*data.tone)+"px",
-                        "transform":data.tone>5?"rotate(180deg)":"rotate(0deg)",
-                        "position":"relative"}}
-                >      
+                 
+                <div
+                    style={{"top":data.tone>5?29-(5*data.tone)+"px":58-(5*data.tone)+"px",
+                            "transform":data.tone>5?"rotate(180deg)":"rotate(0deg)",
+                            "position":"relative"}}
+                    >
+                    
                     <svg
                     height={height}
                     width={width}
