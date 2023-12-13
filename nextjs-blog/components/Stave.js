@@ -102,11 +102,13 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
     }
     function updateCoordinatesOfNewSigniture(event,tone) {
         let allElementsPointedByCursor = document.elementsFromPoint(event.clientX,event.clientY);
+        console.log(allElementsPointedByCursor);
         let pointedBar = allElementsPointedByCursor.filter(elem =>elem.id.includes("bar"))[0]
+        //if user has selected tool and we know bar he is pointing at then...
         if(activeTool!=null && pointedBar){
+            // deletes the old inserted sign
             deleteSign();
             let pointedBarNumber = pointedBar.id.replace("bar","");
-            // deletes the old inserted sign
             setData(currentData =>{
                     let width, content;
                     return {...currentData,"composition":currentData["composition"].map(object=>{

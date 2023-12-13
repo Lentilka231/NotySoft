@@ -16,7 +16,7 @@ function HelpLines({tone}){
                 {iterator.map((i,n)=>(
                     <line 
                     key={n}
-                    style={{"stroke":"black","stroke-width":"10"}}
+                    style={{"stroke":"black","strokeWidth":"10"}}
                     x1="30" y1={257-i*75+(tone%2==0?0:-37)+"px"}
                     x2="180" y2={257-i*75+(tone%2==0?0:-37)+"px"}
                     />
@@ -61,22 +61,29 @@ export function Note({className, colour="#000000", type, width, height, setNewAc
             )   
     }else{
         return(
-        <div 
-        id={data["id"]}
-        style={{"top":data.tone>5?29-(5*data.tone)+"px":58-(5*data.tone)+"px",
-                "transform":data.tone>5?"rotate(180deg)":"rotate(0deg)",
-                "margin-left":data.marginLeft}}
-        className={styles[className]}>      
-            <svg
-            height={height}
-            width={width}
-            viewBox="0 0 210 700">
-                <path
-                style={{"fill":colour}}
-                d={d}/>            
-                <HelpLines tone={data.tone}/>
-            </svg>
-        </div>
+            <div
+                id={data["id"]}
+                style={{"height":"100%",
+                        "width":"fit-content",
+                        "marginLeft":data.marginLeft}}
+                className={styles[className]}>
+                <div 
+                
+                style={{"top":data.tone>5?29-(5*data.tone)+"px":58-(5*data.tone)+"px",
+                        "transform":data.tone>5?"rotate(180deg)":"rotate(0deg)",
+                        "position":"relative"}}
+                >      
+                    <svg
+                    height={height}
+                    width={width}
+                    viewBox="0 0 210 700">
+                        <path
+                        style={{"fill":colour}}
+                        d={d}/>            
+                        <HelpLines tone={data.tone}/>
+                    </svg>
+                </div>
+            </div>
         )   
     }
 }
