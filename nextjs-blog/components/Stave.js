@@ -56,8 +56,8 @@ function MusicalObjectsOnStave({data}){
         {data.map((object,index) =>{
             switch (object["object"]){
                 case "bar":
-                    let barWidth = index+1<data.length?object["width"]:STAVE_WIDTH_LEGTH-len;
-                    len+=object["width"];
+                    let barWidth = index+1<data.length?object["barWidth"]:STAVE_WIDTH_LEGTH-len;
+                    len+=object["barWidth"];
                     return (
                         <div key={index} 
                         id={object["index"]} 
@@ -79,107 +79,225 @@ function MusicalObjectsOnStave({data}){
     )
 }
 export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar, setLastEditedBar, newestID, setNewestID,compositionSettings}){
-    function fillSpaceInBar(barObject){
-        let filledSpace=0;
-        for(let i=0;i<barObject.length;i++){
-            filledSpace+=28+barObject[i]["marginLeft"];
-        }
-        return filledSpace;
-    }
+    
+    const MAXIMUM_EXPANSION = 15;
+    const SIGN_WIDTH = 28;
+
+
     function deleteSign(){
+        function getDelSignIndex (content){
+            for(let i = 0;i<content.length;i++){
+                if(content[i]["sign"].includes("_newSign")){
+                    return i;
+                }
+            }
+            return -1;
+        }
+        function filledSpaceInBarWithoutDelSign(barContent){
+            let filledSpace = 0;
+            barContent.forEach(sign =>{
+                if(!(sign["sign"].includes("_newSign"))){
+                    filledSpace += SIGN_WIDTH + sign["marginLeft"];
+                }
+            })
+            return filledSpace;
+        }
+        function newBarWidth(newFilledSpace){
+            let minBarWidth = compositionSettings["bar-min-width"]
+            if(newFilledSpace<minBarWidth){
+                return minBarWidth;
+            }else{
+                return newFilledSpace;
+            }
+        }
         // use to delete sign which is no yet in composition firmly set (-> deleting sign witch has sufix _newSign)
         setData(currentData =>{
             return {...currentData,"composition":currentData["composition"].map(object=>{   
                 if(object["index"]=="bar"+lastEditedBar["bar"]){
-                    let width=object["width"];
-                    let delSign=object["content"].filter(sign => (sign["sign"].includes("_newSign")));
-                    if(delSign.length>0){
-                        let delSignWidth = delSign[0].marginLeft+24;
-                        if(object["width"]-delSignWidth>compositionSettings["bar-min-width"]){
-                            width=object["width"]-delSignWidth;
-                        }else{
-                            width=compositionSettings["bar-min-width"];
+                    let barWidth = object["barWidth"];
+                    let delSignIndex = getDelSignIndex(object["content"]);
+                    if(delSignIndex!=-1){
+                        if(delSignIndex!=object["content"].length-1){
+                            let delSignSpace = object["content"][delSignIndex]["marginLeftOfFollowingSign"];
+                            //resets marginLeft to following Sign
+                            object["content"][delSignIndex+1]["marginLeft"]=delSignSpace;
                         }
+                        let newFilledSpace = filledSpaceInBarWithoutDelSign(object["content"]);
+                        barWidth = newBarWidth(newFilledSpace);
                     }
-                    return {...object,width,"content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
+                    return {...object, barWidth, "content":object["content"].filter(sign => !(sign["sign"].includes("_newSign")))}
                 }
                 return object;
             })}
         })
     }
     function updateCoordinatesOfNewSigniture(event,tone) {
+        function distanceFromLeftLineBarToSign(pointedBarNumber, event){
+            let barCoordinates = document.getElementById("bar"+pointedBarNumber).getBoundingClientRect();
+            let distance = event.clientX-barCoordinates.left-SIGN_WIDTH/2;
+            return distance
+        }
+        function filledSpaceInBar(barContent){
+            let filledSpace = 0;
+            for(let i = 0; i<barContent.length; i++){
+                filledSpace += SIGN_WIDTH + barContent[i]["marginLeft"];
+            }
+            return filledSpace;
+        }
+        function newFilledSpaceInBar(filledSpace,distanceFromLeftLineBar){
+            if(filledSpace>distanceFromLeftLineBar){
+                return filledSpace+28
+            }else{
+                return distanceFromLeftLineBar+28;
+            }
+        }
+        function newFilledSpaceInBar2(filledSpace, followingSignMarginLeft){
+            if(followingSignMarginLeft>SIGN_WIDTH){
+                return filledSpace;
+            }else{
+                return filledSpace+SIGN_WIDTH-followingSignMarginLeft;
+            }
+        }
+        function getMarginLeftForLastSign(distanceFromLeftLineBar, currentBarWidth, filledSpace){
+            let remainingSpaceWithoutNewSign = currentBarWidth - filledSpace;
+            let neededSpaceForSign = SIGN_WIDTH-remainingSpaceWithoutNewSign>0?SIGN_WIDTH-remainingSpaceWithoutNewSign:0;
+            let maxMargin = currentBarWidth + MAXIMUM_EXPANSION-SIGN_WIDTH+neededSpaceForSign;
+            if(distanceFromLeftLineBar-filledSpace<0){
+                //if cursor is more left than sign can go
+                return 0;
+            }else if (distanceFromLeftLineBar<maxMargin){
+                //if cursor is not behind maximum, where the sign would not fit anymore.
+                return distanceFromLeftLineBar-filledSpace;
+            }else{
+                //otherwise it's maximum possible marginLeft;
+                return maxMargin-filledSpace;
+            }
+        }
+        function getMarginLeftForMiddleSign(distanceFromLeftLineBar, filledSpaceBeforeSign, followingSignMarginLeft){
+            let maxMargin = filledSpaceBeforeSign+followingSignMarginLeft-SIGN_WIDTH;
+            if(distanceFromLeftLineBar<filledSpaceBeforeSign){
+                //if we point before the new sign, marginLeft = 0;
+                return 0;
+            }else if(distanceFromLeftLineBar<maxMargin){
+                //if we point in a distance shorter than maximum then marginLeft is pointedDistance - filledSpace
+                return distanceFromLeftLineBar-filledSpaceBeforeSign;
+            }else if(followingSignMarginLeft>SIGN_WIDTH){
+                //if point after maximum but sign would normally fit
+                return maxMargin-filledSpaceBeforeSign;
+            }else{
+                //if point after maximum but sign would not even fit normally
+                return 0;
+            }
+        }
+        function getNewBarWidth(currentBarWidth,filledSpace,newFilledSpace){
+            let freeSpace = currentBarWidth-filledSpace;
+            if (freeSpace<SIGN_WIDTH){
+                //if there is not even place for sign
+                let neededExpansionForSign = (SIGN_WIDTH-freeSpace);
+                if(newFilledSpace<currentBarWidth+neededExpansionForSign+MAXIMUM_EXPANSION){
+                    //if newFilledSpace is smaller than maximum resize
+                    return newFilledSpace;
+                }else{
+                    return currentBarWidth+MAXIMUM_EXPANSION+neededExpansionForSign;
+                }
+            }else{
+                //if there's still a place for new sign
+                if(newFilledSpace<currentBarWidth){
+                    //if it can fit without resizing
+                    return currentBarWidth;
+                }else if(newFilledSpace<currentBarWidth+MAXIMUM_EXPANSION){
+                    //if expanding is smaller than maximum
+                    return newFilledSpace;
+                }else{
+                    return currentBarWidth+MAXIMUM_EXPANSION;
+                }
+            }
+        }
+        function getNewSignPositionIndex(barContent,distanceFromLeftLineBar){
+            let filledSpaceBeforNewSign = 0;
+            for(let i=0;i<barContent.length;i++){
+                filledSpaceBeforNewSign+=SIGN_WIDTH+barContent[i]["marginLeft"];
+                if(distanceFromLeftLineBar<filledSpaceBeforNewSign-SIGN_WIDTH/2){
+                    return i;
+                }
+            }
+            return barContent.length;
+        }
+        function getFilledSpaceBeforeNewSign(barContent,distanceFromLeftLineBar){
+            let filledSpaceBeforNewSign = 0;
+            for(let i=0;i<barContent.length;i++){
+                if(distanceFromLeftLineBar<filledSpaceBeforNewSign+barContent[i]["marginLeft"]){
+                    return filledSpaceBeforNewSign;
+                }
+                filledSpaceBeforNewSign+=SIGN_WIDTH+barContent[i]["marginLeft"];
+            }
+            return filledSpaceBeforNewSign;
+        }
+        function getFollowingSignNewMarginLeft(newSignMarginLeft,folowingSignCurrentMarginLeft){
+            let newMarginLeft = folowingSignCurrentMarginLeft-(newSignMarginLeft+SIGN_WIDTH);
+            if(newMarginLeft>0){
+                return newMarginLeft;
+            }else{
+                return 0;
+            }
+        }
+
         let allElementsPointedByCursor = document.elementsFromPoint(event.clientX,event.clientY);
-        let pointedSigns = allElementsPointedByCursor.filter(elem => elem.id.includes("sign"))
-        //console.log(pointedSign);
+
         let pointedBar = allElementsPointedByCursor.filter(elem => elem.id.includes("bar"))[0]
-        //if user has selected tool and we know bar he is pointing at then...
+        //if user has selected tool and we know bar he is pointing at, then...
         if(activeTool!=null && pointedBar){
             // deletes the old inserted sign
             deleteSign();
+
+
             let pointedBarNumber = pointedBar.id.replace("bar","");
             setData(currentData =>{
-                    let width, content;
+                    let barWidth, content;
                     return {...currentData,"composition":currentData["composition"].map(object=>{
-                        if(object["index"]=="bar"+pointedBarNumber){
+                        if(object["index"]=="bar"+pointedBarNumber){                            
 
-                            let idofLastSignInBar, leftSideDistance, coordinates;
-                            if(object["content"].at(-1)){
-                                //if the bar already contains a sign then get the distance from that sign
-                                idofLastSignInBar = object["content"].at(-1)["id"];
-                                coordinates = document.getElementById("sign"+idofLastSignInBar).getBoundingClientRect();
-                                leftSideDistance = event.clientX-coordinates.left-42;
-                            }else{ 
-                                //otherwise get it from left border of bar
-                                coordinates = document.getElementById("bar"+pointedBarNumber).getBoundingClientRect();
-                                leftSideDistance=event.clientX-coordinates.left-12;
-                            }
-
+                            let distanceFromLeftLineBar = distanceFromLeftLineBarToSign(pointedBarNumber, event);
+                            let filledSpace = filledSpaceInBar(object["content"]);
                             
-                            let filledSpace = fillSpaceInBar(object["content"]);
-                            let newFilledSpace = leftSideDistance+28+filledSpace+(-leftSideDistance>0?-leftSideDistance:0);
-                            let marginLeft;
-                            // preparing new width for bar
-                            if(newFilledSpace>compositionSettings["bar-min-width"]){
-                                
-                                //freesSpace is distance between filledspace+newsign (without leftmargin) and 15px after end
-                                let freeSpace = compositionSettings["bar-min-width"]-newFilledSpace+leftSideDistance;
-                                freeSpace=freeSpace>0?freeSpace+15:15;
+                            let currentBarWidth = object["barWidth"];
+                            
+                            
 
-                                if (leftSideDistance>freeSpace){
-                                    width = newFilledSpace-leftSideDistance+(freeSpace>0?freeSpace:15);
-                                    marginLeft = freeSpace>0?freeSpace:15;
-                                }else{
-                                    width = newFilledSpace;
-                                    marginLeft = leftSideDistance>0?leftSideDistance:0
-                                }
-                            }else{
-                                width = compositionSettings["bar-min-width"];
-                                marginLeft = leftSideDistance>0?leftSideDistance:0
-                            }
-                            let pointedForeignSignID=0;
-                            let positionInBar=object["content"].length;
-                            pointedSigns.forEach((elem,i)=>{
-                                let idOfSign = elem.id.replace("sign","")
-                                if(idOfSign != newestID){
-                                    pointedForeignSignID = idOfSign;
-                                }
-                            })
-                            if(pointedForeignSignID){
-                                for(let i=0;i<object["content"].length;i++){
-                                    if(object["content"][i].id==pointedForeignSignID){
-                                        positionInBar=i
-                                    }
-                                }
-                                console.log(pointedForeignSignID);
-                            }
-                            //making a copied object width new sign;
+                            let positionInBar = getNewSignPositionIndex(object["content"], distanceFromLeftLineBar);
+                            let filledSpaceBeforNewSign = getFilledSpaceBeforeNewSign(object["content"], distanceFromLeftLineBar);
+                            
+                            //both important
+                            let marginLeft, marginLeftOfFollowingSign, newFilledSpace;
                             content = [...object["content"]];
+
+                            if(positionInBar != object["content"].length){
+                                //if the new sign is put before last position
+                                marginLeftOfFollowingSign = object["content"][positionInBar]["marginLeft"];
+                                marginLeft = getMarginLeftForMiddleSign(distanceFromLeftLineBar, filledSpaceBeforNewSign, marginLeftOfFollowingSign)
+                                newFilledSpace = newFilledSpaceInBar2(filledSpace, marginLeftOfFollowingSign);
+                                //important
+                                console.log(1);
+                                content[positionInBar]["marginLeft"] = getFollowingSignNewMarginLeft(marginLeft, marginLeftOfFollowingSign);
+                            }else{
+                                console.log(2);
+                                newFilledSpace = newFilledSpaceInBar(filledSpace, distanceFromLeftLineBar);
+
+                                //if the new sign is put on last position
+                                marginLeftOfFollowingSign = 0;
+                                marginLeft = getMarginLeftForLastSign(distanceFromLeftLineBar, currentBarWidth, filledSpaceBeforNewSign);
+                            }
+
+                            //important (a variable which is important is being remembered)
+                            barWidth = getNewBarWidth(currentBarWidth, filledSpace, newFilledSpace);
+
                             content.splice(positionInBar,0,{
                                 "sign":activeTool+"_newSign",
                                 "tone":tone,
                                 "id":newestID,
-                                "marginLeft":marginLeft});
-                            return {...object,width,content};
+                                "marginLeft":marginLeft,
+                                "marginLeftOfFollowingSign":marginLeftOfFollowingSign});
+                            return {...object, barWidth, content};
                         }
                         return object;
                     })}
@@ -187,7 +305,7 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
             setLastEditedBar({"bar":pointedBarNumber,"sign":newestID})
         }
     }
-    function onMouseLeave(){
+    function mouseLeavesStave(){
         deleteSign();
     }
     function setFirmly_ontoStave(){
@@ -206,33 +324,33 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
     let portionOfNeededData = [...data["composition"]].splice(fromTo[0],fromTo[1])
     return (
         <div className={styles.stave}>
-            <Space tone={18} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={17} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={16} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={15} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={14} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={13} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={12} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={11} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={18} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={17} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={16} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={15} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={14} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={13} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={12} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={11} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
 
-            <Line  tone={10} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={9}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Line  tone={8}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={7}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Line  tone={6}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={5}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Line  tone={4}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={3}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Line  tone={2}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Line  tone={10} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={9}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Line  tone={8}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={7}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Line  tone={6}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={5}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Line  tone={4}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={3}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Line  tone={2}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
 
-            <Space tone={1}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={0}  onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={-1} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={-2} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={-3} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={-4} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={-5} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
-            <Space tone={-6} onMouseDown={setFirmly_ontoStave} onMouseLeave={onMouseLeave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={1}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={0}  onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={-1} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={-2} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={-3} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={-4} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={-5} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
+            <Space tone={-6} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>
             <MusicalObjectsOnStave data={portionOfNeededData}/>
         </div>
     )
