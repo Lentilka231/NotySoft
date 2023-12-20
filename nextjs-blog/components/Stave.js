@@ -137,21 +137,21 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
             let distance = event.clientX-barCoordinates.left-SIGN_WIDTH/2;
             return distance
         }
-        function filledSpaceInBar(barContent){
+        function getFilledSpaceInBar(barContent){
             let filledSpace = 0;
             for(let i = 0; i<barContent.length; i++){
                 filledSpace += SIGN_WIDTH + barContent[i]["marginLeft"];
             }
             return filledSpace;
         }
-        function newFilledSpaceInBar(filledSpace,distanceFromLeftLineBar){
+        function getNewFilledSpaceInBarWhenSignIsInsertedAtTheEnd(filledSpace,distanceFromLeftLineBar){
             if(filledSpace>distanceFromLeftLineBar){
                 return filledSpace+28
             }else{
                 return distanceFromLeftLineBar+28;
             }
         }
-        function newFilledSpaceInBar2(filledSpace, followingSignMarginLeft){
+        function getNewFilledSpaceInBarWhenSignIsInsertedInBetween(filledSpace, followingSignMarginLeft){
             if(followingSignMarginLeft>SIGN_WIDTH){
                 return filledSpace;
             }else{
@@ -226,7 +226,7 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
         function getFilledSpaceBeforeNewSign(barContent,distanceFromLeftLineBar){
             let filledSpaceBeforNewSign = 0;
             for(let i=0;i<barContent.length;i++){
-                if(distanceFromLeftLineBar<filledSpaceBeforNewSign+barContent[i]["marginLeft"]){
+                if(distanceFromLeftLineBar<filledSpaceBeforNewSign+barContent[i]["marginLeft"]+SIGN_WIDTH){
                     return filledSpaceBeforNewSign;
                 }
                 filledSpaceBeforNewSign+=SIGN_WIDTH+barContent[i]["marginLeft"];
@@ -258,34 +258,30 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
                         if(object["index"]=="bar"+pointedBarNumber){                            
 
                             let distanceFromLeftLineBar = distanceFromLeftLineBarToSign(pointedBarNumber, event);
-                            let filledSpace = filledSpaceInBar(object["content"]);
-                            
-                            let currentBarWidth = object["barWidth"];
-                            
-                            
+                            let filledSpace = getFilledSpaceInBar(object["content"]);
+                            let currentBarWidth = object["barWidth"];                            
 
                             let positionInBar = getNewSignPositionIndex(object["content"], distanceFromLeftLineBar);
-                            let filledSpaceBeforNewSign = getFilledSpaceBeforeNewSign(object["content"], distanceFromLeftLineBar);
-                            
                             //both important
                             let marginLeft, marginLeftOfFollowingSign, newFilledSpace;
                             content = [...object["content"]];
 
                             if(positionInBar != object["content"].length){
                                 //if the new sign is put before last position
+                                let filledSpaceBeforNewSign = getFilledSpaceBeforeNewSign(object["content"], distanceFromLeftLineBar);
+
                                 marginLeftOfFollowingSign = object["content"][positionInBar]["marginLeft"];
                                 marginLeft = getMarginLeftForMiddleSign(distanceFromLeftLineBar, filledSpaceBeforNewSign, marginLeftOfFollowingSign)
-                                newFilledSpace = newFilledSpaceInBar2(filledSpace, marginLeftOfFollowingSign);
+                                newFilledSpace = getNewFilledSpaceInBarWhenSignIsInsertedInBetween(filledSpace, marginLeftOfFollowingSign);
+                                
                                 //important
-                                console.log(1);
                                 content[positionInBar]["marginLeft"] = getFollowingSignNewMarginLeft(marginLeft, marginLeftOfFollowingSign);
                             }else{
-                                console.log(2);
-                                newFilledSpace = newFilledSpaceInBar(filledSpace, distanceFromLeftLineBar);
+                                newFilledSpace = getNewFilledSpaceInBarWhenSignIsInsertedAtTheEnd(filledSpace, distanceFromLeftLineBar);
 
                                 //if the new sign is put on last position
                                 marginLeftOfFollowingSign = 0;
-                                marginLeft = getMarginLeftForLastSign(distanceFromLeftLineBar, currentBarWidth, filledSpaceBeforNewSign);
+                                marginLeft = getMarginLeftForLastSign(distanceFromLeftLineBar, currentBarWidth, filledSpace);
                             }
 
                             //important (a variable which is important is being remembered)
