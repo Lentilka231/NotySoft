@@ -1,11 +1,8 @@
 import styles from "../styles/whitepage.module.scss"
 import Stave from "./Stave"
 import React, { useState } from 'react'
-import json from "../public/composition.json"
 
-export default function WhitePage({activeTool}) {
-    const [data,setData]= useState(json);
-    const [compositionSettings,setCompositionSettings]=React.useState(data["settings"]);
+export default function WhitePage({activeTool, data, setData, compositionSettings}) {
     
     const [lastEditedBar,setLastEditedBar] = React.useState({"bar":null,"sign":null});
     const [newestID,setNewestID]=React.useState(data["newestID"]);

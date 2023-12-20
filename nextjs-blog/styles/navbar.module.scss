@@ -9,10 +9,40 @@ $darkGrey2:#333533;
     background-color: $darkGrey1;
     width:100%;
     height:100px;
+    display:flex;
 }
 .toolContainer{
     display: grid;
+    width:fit-content;
+    padding:15px;
+}
+.signsToolContainer{
     grid-template-rows: 35px 35px;
     grid-template-columns: repeat(4,30px);
-    padding:15px;
+}
+.barToolContainer{
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(4,50px);
+    .toolName{
+        margin:0;
+        color:white;
+        font-size:0.7em;
+        text-align: center;
+    }
+    path{
+        fill:white;
+    }
+    .tool{
+        cursor:pointer;
+        border-radius: 3px;
+    }
+    .tool:hover{
+        background-color: $yellowishOrange;
+        path{
+            fill:$darkGrey1 ;
+        }
+        .toolName{
+            color:black;
+        }
+    }
 }

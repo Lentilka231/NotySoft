@@ -49,15 +49,24 @@ function JSXfromSign({object}){
     )
 }
 function MusicalObjectsOnStave({data}){
+    function getLengthofBar(index, data, barWidth,filledSpace){
+        if(index<data.length-1){
+            //if the bar is not last
+            return barWidth;
+        }else{
+            //if the bar is last on the stave
+            return STAVE_WIDTH_LEGTH-filledSpace;
+        }
+    }
     const STAVE_WIDTH_LEGTH=970;
-    let len=0;
+    let filledSpace=0;
     return (
     <div className={styles.signs} >
         {data.map((object,index) =>{
             switch (object["object"]){
                 case "bar":
-                    let barWidth = index+1<data.length?object["barWidth"]:STAVE_WIDTH_LEGTH-len;
-                    len+=object["barWidth"];
+                    let barWidth = getLengthofBar(index, data, object["barWidth"], filledSpace);
+                    filledSpace+=object["barWidth"];
                     return (
                         <div key={index} 
                         id={object["index"]} 
@@ -68,10 +77,10 @@ function MusicalObjectsOnStave({data}){
                         </div>
                     )
                 case "clef":
-                    len+=50;
+                    filledSpace+=50;
                     return <Clef key={index} type={object["type"]} width="50px" className="clef" />
                 case "time":
-                    len+=30;
+                    filledSpace+=30;
                     return <Time key={index} type={object["type"]} width="30px" className="time"/>
             }
         })}
@@ -216,17 +225,17 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
         function getNewSignPositionIndex(barContent,distanceFromLeftLineBar){
             let filledSpaceBeforNewSign = 0;
             for(let i=0;i<barContent.length;i++){
-                filledSpaceBeforNewSign+=SIGN_WIDTH+barContent[i]["marginLeft"];
-                if(distanceFromLeftLineBar<filledSpaceBeforNewSign-SIGN_WIDTH/2){
+                if(distanceFromLeftLineBar<filledSpaceBeforNewSign+barContent[i]["marginLeft"]+SIGN_WIDTH/3){
                     return i;
                 }
+                filledSpaceBeforNewSign+=SIGN_WIDTH+barContent[i]["marginLeft"];
             }
             return barContent.length;
         }
         function getFilledSpaceBeforeNewSign(barContent,distanceFromLeftLineBar){
             let filledSpaceBeforNewSign = 0;
             for(let i=0;i<barContent.length;i++){
-                if(distanceFromLeftLineBar<filledSpaceBeforNewSign+barContent[i]["marginLeft"]+SIGN_WIDTH){
+                if(distanceFromLeftLineBar<filledSpaceBeforNewSign+barContent[i]["marginLeft"]+SIGN_WIDTH/3){
                     return filledSpaceBeforNewSign;
                 }
                 filledSpaceBeforNewSign+=SIGN_WIDTH+barContent[i]["marginLeft"];
@@ -269,16 +278,15 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
                             if(positionInBar != object["content"].length){
                                 //if the new sign is put before last position
                                 let filledSpaceBeforNewSign = getFilledSpaceBeforeNewSign(object["content"], distanceFromLeftLineBar);
-
+                                
                                 marginLeftOfFollowingSign = object["content"][positionInBar]["marginLeft"];
                                 marginLeft = getMarginLeftForMiddleSign(distanceFromLeftLineBar, filledSpaceBeforNewSign, marginLeftOfFollowingSign)
                                 newFilledSpace = getNewFilledSpaceInBarWhenSignIsInsertedInBetween(filledSpace, marginLeftOfFollowingSign);
-                                
                                 //important
                                 content[positionInBar]["marginLeft"] = getFollowingSignNewMarginLeft(marginLeft, marginLeftOfFollowingSign);
                             }else{
                                 newFilledSpace = getNewFilledSpaceInBarWhenSignIsInsertedAtTheEnd(filledSpace, distanceFromLeftLineBar);
-
+                                
                                 //if the new sign is put on last position
                                 marginLeftOfFollowingSign = 0;
                                 marginLeft = getMarginLeftForLastSign(distanceFromLeftLineBar, currentBarWidth, filledSpace);
