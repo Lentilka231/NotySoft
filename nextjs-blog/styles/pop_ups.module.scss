@@ -5,21 +5,53 @@ $darkGrey1: #202020;
 $darkGrey2:#333533;
 
 .unclickableBackground{
-    display:block;
-    position: absolute;
+    position: fixed;
     top:0px;
     bottom:0px;
-    left:0px;
     right:0px;
-    pointer-events: none;
-    background-color: #FFD100;
-    opacity:0.5;
-    z-index:10;
-    content:" ";
-    width:100%;
-    height:100%;
+    left:0px;
+    cursor:default;
+    opacity:1;
+    z-index:11;
 }
 
 .addMultipleBarsWindow{
-
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    background-color: $darkGrey1;
+    width:485px;
+    height:300px;
+    padding:30px;
+    h1{
+        color:white;
+        font-weight: bold;
+        font-size:28px;
+        margin:0px;
+    }
+    .buttons{
+        padding:5px;
+        font-size:16px;
+        position:absolute;
+    }
+    div{
+        label{
+            color:white;
+            font-size: 20px;
+            margin:5px 0px;
+            display: inline;
+        }
+        .numberOfNewBars{
+            width:70px;
+            margin-left:20px;
+            font-size: 20px;
+        }
+        .newBarsPosition{
+            margin-right: 10px;;
+        }
+        margin-top:20px;
+        margin-bottom: 40px;
+        
+    }
 }

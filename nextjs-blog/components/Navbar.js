@@ -1,7 +1,8 @@
 import styles from "../styles/navbar.module.scss"
-import {NotesToolContainer,BarContainer} from "./ToolContainers"
+import NotesToolContainer from "./ToolContainers/NotesToolContainer.js"
+import BarToolContainer from "./ToolContainers/BarToolContainer.js"
 import React from "react"
-export default function Navbar({setActiveTool, setData, compositionSettings}){
+export default function Navbar({setActiveTool, data, setData, setPopUpWindowIndex}){
     let toolNames={
         "note_whole":false,
         "note_half":false,
@@ -15,9 +16,10 @@ export default function Navbar({setActiveTool, setData, compositionSettings}){
                 decorationToolList={decorationToolList}
                 setDecorationToolList={setDecorationToolList}
                 setActiveTool={setActiveTool} />
-            <BarContainer 
+            <BarToolContainer 
+                data={data}
                 setData={setData}
-                compositionSettings={compositionSettings}/>
+                setPopUpWindowIndex={setPopUpWindowIndex}/>
         </header>
         </>
     )

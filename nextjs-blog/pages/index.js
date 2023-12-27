@@ -7,23 +7,24 @@ import json from "../public/composition.json"
 
 export default function Home(){
   const [data, setData]= React.useState(json);
-  const [compositionSettings,setCompositionSettings]=React.useState(data["settings"]);
-
+  const [popUpWindowIndex, setPopUpWindowIndex] = React.useState(-1)
   const [activeTool, setActiveTool] = React.useState();
   return (
     <>
-        <PopUps/>
-
         <Navbar 
           setActiveTool={setActiveTool} 
+          data={data}
           setData={setData}
-          compositionSettings={compositionSettings}/>
+          setPopUpWindowIndex={setPopUpWindowIndex}/>
         <WhitePage
           activeTool={activeTool} 
           data={data}
+          setData={setData}/>
+        <PopUps 
+          data={data}
           setData={setData}
-          compositionSettings={compositionSettings} />
-
+          popUpWindowIndex={popUpWindowIndex}
+          setPopUpWindowIndex={setPopUpWindowIndex}/>
     </>
   )
 }

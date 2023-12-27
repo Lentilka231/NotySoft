@@ -87,7 +87,7 @@ function MusicalObjectsOnStave({data}){
     </div>
     )
 }
-export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar, setLastEditedBar, newestID, setNewestID,compositionSettings}){
+export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar, setLastEditedBar, newestID, setNewestID}){
     
     const MAXIMUM_EXPANSION = 15;
     const SIGN_WIDTH = 28;
@@ -112,7 +112,7 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
             return filledSpace;
         }
         function newBarWidth(newFilledSpace){
-            let minBarWidth = compositionSettings["bar-min-width"]
+            let minBarWidth = data["settings"]["bar-min-width"]
             if(newFilledSpace<minBarWidth){
                 return minBarWidth;
             }else{

@@ -1,38 +1,11 @@
-import styles from "../styles/navbar.module.scss"
-import {Note} from "./SVG"
-import {AddMultipleBarsPopUp} from "./PopUps.js"
+import styles from "../../styles/navbar.module.scss"
 
-export function NotesToolContainer ({setActiveTool,decorationToolList,setDecorationToolList}){
-    function setNewActiveTool(toolName){
-        if(toolName){
-            let newSetting = !decorationToolList[toolName]
-            // this says what type of tool you are going to use
-            setActiveTool(newSetting?toolName:undefined); 
-            //this part is just for decoration (turns active tool background to yellow)
-            setDecorationToolList(currentData =>{
-                let helpDict = {};
-                Object.keys(currentData).forEach(function(key){
-                    helpDict[key]=false;
-                });
-                helpDict[toolName]=newSetting;
-                return {...helpDict};
-            })
-        }
-    }   
-    return (
-        <div className={styles.signsToolContainer+" "+styles.toolContainer}>
-            <Note className={"noteInToolBar"} activeToolList={decorationToolList} height="100%" type="whole" setNewActiveTool={setNewActiveTool}/>
-            <Note className={"noteInToolBar"} activeToolList={decorationToolList} height="100%" type="half" setNewActiveTool={setNewActiveTool}/>
-            <Note className={"noteInToolBar"} activeToolList={decorationToolList} height="100%" type="quarter" setNewActiveTool={setNewActiveTool}/>
-        </div>
-    );
-}
-export function BarContainer ({setData, compositionSettings}){
+export default function BarToolContainer ({data, setData, setPopUpWindowIndex}){
     function addNewBar(){
         let newBar = {
             "object":"bar",
             "index":"bar",
-            "barWidth":compositionSettings["bar-min-width"],
+            "barWidth":data["settings"]["bar-min-width"],
             "rightBarLine":"line",
             "content":[]
         }
@@ -46,8 +19,8 @@ export function BarContainer ({setData, compositionSettings}){
     function removeSelectedBars(){
 
     }
-    function addMultipleBars(){
-        AddMultipleBarsPopUp();
+    function showWindowForAddingMultipleBars(){
+        setPopUpWindowIndex(0);
     }
     return (
         <div className={styles.barToolContainer+" "+styles.toolContainer}>
@@ -84,7 +57,7 @@ export function BarContainer ({setData, compositionSettings}){
                 </p>
             </div>
             <div
-            onClick={()=>addMultipleBars()}
+            onClick={()=>showWindowForAddingMultipleBars()}
             className={styles.tool}
             >
                 <svg
@@ -99,8 +72,6 @@ export function BarContainer ({setData, compositionSettings}){
                     Add multiple bars
                 </p>
             </div>
-            {/* <div>Delete bars</div>
-            <div>Add multiple bars</div> */}
         </div>
     );
 }
