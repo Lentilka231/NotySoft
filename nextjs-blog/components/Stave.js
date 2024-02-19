@@ -59,9 +59,10 @@ function MusicalObjectsOnStave({data}){
         }
     }
     const STAVE_WIDTH_LEGTH=970;
-    let filledSpace=0;
+    let filledSpace=50;
     return (
     <div className={styles.signs} >
+        <Clef key={0} type={"treble"} width="50px" className="clef" />
         {data.map((object,index) =>{
             switch (object["object"]){
                 case "bar":
@@ -325,7 +326,8 @@ export default function Stave ({fromTo, data, setData, activeTool, lastEditedBar
         })
         setNewestID(newestID+1)
     }
-    let portionOfNeededData = [...data["composition"]].splice(fromTo[0],fromTo[1])
+    let portionOfNeededData = [...data["composition"]].slice(fromTo[0],fromTo[1]+1);
+    console.log("babababaab: ",fromTo,portionOfNeededData,[...data["composition"]]);
     return (
         <div className={styles.stave}>
             <Space tone={18} onMouseDown={setFirmly_ontoStave} onMouseLeave={mouseLeavesStave} onMouseMove={updateCoordinatesOfNewSigniture}/>

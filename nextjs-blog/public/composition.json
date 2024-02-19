@@ -2,6 +2,7 @@
     "composition":[
         {
             "object":"clef",
+            "barWidth":50,
             "type":"treble"
         },
         {
@@ -80,11 +81,19 @@
             "content":[
                 
             ]
-        }
-        ,
+        },
         {
             "object":"bar",
             "index":"bar9",
+            "barWidth":100,
+            "RightBarLine":"line",
+            "content":[
+                
+            ]
+        },
+        {
+            "object":"bar",
+            "index":"bar10",
             "barWidth":100,
             "RightBarLine":"line",
             "content":[
@@ -94,6 +103,7 @@
     ],
     "Staves":[0],
     "newestID":2,
+    "newestObjectID":11,
     "settings":{
         "bar-min-width":100
     }

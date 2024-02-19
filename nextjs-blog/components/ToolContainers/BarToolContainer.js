@@ -4,7 +4,7 @@ export default function BarToolContainer ({data, setData, setPopUpWindowIndex}){
     function addNewBar(){
         let newBar = {
             "object":"bar",
-            "index":"bar",
+            "index":"bar"+data["newestObjectID"],
             "barWidth":data["settings"]["bar-min-width"],
             "rightBarLine":"line",
             "content":[]
@@ -12,8 +12,9 @@ export default function BarToolContainer ({data, setData, setPopUpWindowIndex}){
         setData(currentData =>{
             let composition = [...currentData["composition"]];
             let positionOfNewBar = composition.length;
+            let newestObjectID = data["newestObjectID"]+1;
             composition.splice(positionOfNewBar, 0, newBar);
-            return {...currentData,composition};
+            return {...currentData,composition,newestObjectID};
         })
     }
     function removeSelectedBars(){
